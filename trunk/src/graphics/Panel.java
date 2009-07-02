@@ -10,14 +10,14 @@ class Panel extends JPanel{
 	public Panel(){
 		repaint();
 	}
-	
-//	Drawing the image
+
+	// Drawing the image
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(image, 0, 0, this);
 	}	
 
-//	Setting the JPanel's Size
+	// Setting the JPanel's Size
     public Dimension getPreferredSize() {
         return new Dimension(800,600);
     }
