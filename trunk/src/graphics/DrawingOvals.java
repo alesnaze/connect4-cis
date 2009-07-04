@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 public class DrawingOvals extends JFrame{
+	/**
+	 * This class draws Ovals (Circles) on the main frame and checks whether any of these Ovals are being clicked on
+	 * then it performs action according to the place of the circle
+	 * */
 	public void mainFrame() {
 		// Creating the Frame and setting it's properties [visibility, size, resizability and closing]
 		DrawingOvals frame = new DrawingOvals();

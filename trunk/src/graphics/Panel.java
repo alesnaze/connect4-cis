@@ -5,6 +5,9 @@ import java.awt.event.*;
 import javax.swing.*;
 
 class Panel extends JPanel{
+	/**
+	 * This class draws the game's Background image and sets its dimension
+	 * */
 	final Image image = new ImageIcon("src/images/Connect4_bg.png").getImage();
 	
 	public Panel(){
