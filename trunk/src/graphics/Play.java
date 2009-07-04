@@ -52,3 +52,40 @@ public class Play extends JFrame{
         return new Dimension(550,400);
     }
 }
+public void moveMade(Move aMove) 
+    {
+        int column = aMove.toInt();
+        int row = board.numerOfChipsInColumn(column) - 1;
+        
+        if(aMove.maker().getNumber() == C4Board.FIRST_PLAYER_NUMBER)
+        {
+            drawBlackToken(row,column);
+            update();
+        }
+        else
+        {
+            drawRedToken(row, column);
+            
+            if(lastComputerMove != null)
+            {
+                clearRedTip(lastComputerMove.toInt());
+            }
+            
+            drawRedTip(aMove.toInt());
+            lastComputerMove = aMove;
+            update();
+            
+        }
+        
+    }
+
+	
+	
+	
+	
+	
+	 public void update()
+    {
+        Graphics g = this.getGraphics();
+        g.drawImage(offscreenImage,0,0, this);
+    }
