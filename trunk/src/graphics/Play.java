@@ -63,82 +63,38 @@ public class Play extends JFrame{
         return new Dimension(550,400);
     }
 }
+
+
+// eng Asmaa's code:
 public void moveMade(Move aMove) 
+{
+    int column = aMove.toInt();
+    int row = board.numerOfChipsInColumn(column) - 1;
+    
+    if(aMove.maker().getNumber() == C4Board.FIRST_PLAYER_NUMBER)
     {
-        int column = aMove.toInt();
-        int row = board.numerOfChipsInColumn(column) - 1;
+        drawBlackToken(row,column);
+        update();
+    }
+    else
+    {
+        drawRedToken(row, column);
         
-        if(aMove.maker().getNumber() == C4Board.FIRST_PLAYER_NUMBER)
+        if(lastComputerMove != null)
         {
-            drawBlackToken(row,column);
-            update();
-        }
-        else
-        {
-            drawRedToken(row, column);
-            
-            if(lastComputerMove != null)
-            {
-                clearRedTip(lastComputerMove.toInt());
-            }
-            
-            drawRedTip(aMove.toInt());
-            lastComputerMove = aMove;
-            update();
-            
+            clearRedTip(lastComputerMove.toInt());
         }
         
+        drawRedTip(aMove.toInt());
+        lastComputerMove = aMove;
+        update();
+        
     }
+    
+}
 
-	
-	
-	
-	
-	
-	 public void update()
-    {
-        Graphics g = this.getGraphics();
-        g.drawImage(offscreenImage,0,0, this);
-    }
-	 
-	 
-	 
-	 public class Asynchronous extends Player
-	 {
-	   
-
-	     
-	     private Move lastMove = null;
-
-	   
-	     /** Creates new AsynchronousPlayer */
-	     public AsynchronousPlayer(String name, int number) 
-	     {
-	         super(name, number);
-	     }
-	     
-	    
-	     public synchronized  Move getMove(Board b)
-	     {
-	         try
-	         {
-	             wait();
-	         }
-	         
-	         catch(InterruptedException e)
-	         {
-	             return null;
-	         }
-	      
-	         return lastMove;
-	     }
-	   
-
-	    public synchronized void makeMove(Move aMove)
-	     {
-	         lastMove = aMove;
-	         notifyAll();
-	     }
-	  
-	 }
-
+public void update()
+{
+    Graphics g = this.getGraphics();
+    g.drawImage(offscreenImage,0,0, this);
+}
