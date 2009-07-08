@@ -1,12 +1,13 @@
 package graphics;
 public class Asynchronous extends Player {
     private Move lastMove = null;
-    /** Creates new AsynchronousPlayer */
+    // Creates new AsynchronousPlayer 
     public AsynchronousPlayer(String name, int number) 
     {
         super(name, number);
     }
     
+    //asked what move it would like to make
     public synchronized  Move getMove(Board b)
     {
         try
@@ -14,6 +15,7 @@ public class Asynchronous extends Player {
             wait();
         }
         
+        //if we are interrupted, then it means the gam is over and return null
         catch(InterruptedException e)
         {
             return null;
@@ -22,6 +24,7 @@ public class Asynchronous extends Player {
         return lastMove;
     }
   
+//Make a move.
 
    public synchronized void makeMove(Move aMove)
     {
