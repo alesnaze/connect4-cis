@@ -1,4 +1,4 @@
-package graphics;
+package main;
 public class Asynchronous extends Player {
     private Move lastMove = null;
     // Creates new AsynchronousPlayer 

@@ -66,6 +66,7 @@ public class Play extends JFrame{
 
 
 // eng Asmaa's code:
+/*
 public void moveMade(Move aMove) 
 {
     int column = aMove.toInt();
@@ -98,3 +99,4 @@ public void update()
     Graphics g = this.getGraphics();
     g.drawImage(offscreenImage,0,0, this);
 }
+*/
