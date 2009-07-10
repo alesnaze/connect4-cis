@@ -54,6 +54,7 @@ public class Check {
 		if ((arr[x][y]==2)&&(arr[x][y+1]==2)&&(arr[x][y+2]==2)&&(arr[x][y+3]==2))r=2;
 		if ((arr[x][y]==1)&&(arr[x][y+1]==1)&&(arr[x][y+2]==1)&&(arr[x][y+3]==1))r=1;
 	}
+	
 
 	public void check2r(int x,int y,int r) {
 		if ((arr[x][y]==2)&&(arr[x+1][y]==2)&&(arr[x+2][y]==2)&&(arr[x+3][y]==2))r=2;
@@ -69,4 +70,32 @@ public class Check {
 		if ((arr[x][y]==2)&&(arr[x-1][y+1]==2)&&(arr[x-2][y+2]==2)&&(arr[x-3][y+3]==2))r=2;
 		if ((arr[x][y]==1)&&(arr[x-1][y+1]==1)&&(arr[x-2][y+2]==1)&&(arr[x-3][y+3]==1))r=1;
 	}
+	
+	public int getScore(Player aPlayer)
+    {
+        if(aPlayer.getNumber() == PLAYER1)
+        {
+            //Connect 4 the score only go to 1
+            if(checkwin()!= 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else //second player
+        {
+            //Connect 4 the score only go to 1
+            if(checkwin() != 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+    } 
 }		
