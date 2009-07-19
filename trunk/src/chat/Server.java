@@ -1,56 +1,91 @@
 package chat;
 
-import java.net.*;
-import java.io.*;
-
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
-public class server extends JFrame{
+import java.net.*;
+
+import java.io.*;
+
+public class Server  extends JFrame implements Runnable {
 	
-	JButton send;
+	JTextField sendSpace;
 	JTextArea recieveSpace;
-	JTextArea sendSpace;
+	JScrollPane sp_recieveSpace;
+	JScrollPane sp_sendSpace;
+	JButton send;
 	
-	ServerSocket server;
+	ServerSocket serverSocket = null;
 	Socket socket;
-	DataInputStream in;
-	DataOutputStream out;
+	BufferedReader in = null;
+	BufferedWriter out = null;
+
 	
-	
-	public server() {
+	public void run() {
+		
+		while(true){
+			try{
+				InetAddress ia = socket.getInetAddress();
+				recieveSpace.append(ia.getHostName()  + " : " + in.readLine() + "\n");
+			}catch(IOException e){
+
+			}
+		}
+	}
+
+	public Server() {
 		setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
 		
-		recieveSpace = new JTextArea(9,20);
-		add(recieveSpace);
+		recieveSpace = new JTextArea(9,28);
+		sp_recieveSpace = new JScrollPane(recieveSpace);
+        add(sp_recieveSpace);
+        recieveSpace.setEditable(false);
 		
-		sendSpace = new JTextArea(4,20);
-		add(sendSpace);
+        sendSpace = new JTextField(20);
+		sp_sendSpace = new JScrollPane(sendSpace);
+        add(sp_sendSpace);
 		
 		send = new JButton("send");
 		add(send);
+		send.setToolTipText("");
 		
-		try {
-			
-			server = new ServerSocket(8000);
-			socket = server.accept();
-			in = new DataInputStream(socket.getInputStream());
-			out =new DataOutputStream(socket.getOutputStream());
-			
-		}catch(IOException e){
-			System.err.println(e);
-		}
-		
-		try {
-			
-			recieveSpace.append("Client : " + in.readUTF() + "\n");
-			
-		}catch(IOException e){
-			System.err.println(e);
-		}
+		this.getRootPane().setDefaultButton(send);
 
+        try {
+			serverSocket = new ServerSocket(8000);
+			socket = serverSocket.accept();
+			
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF8"));
+			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
+			
+			Thread t = new Thread(this);
+			t.start();
+			
+		}catch(IOException ioe) {
+
+		}
+		
+
+		send.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){
+			
+			recieveSpace.append(" you : " + sendSpace.getText() + "\n");
+			
+			try {
+						
+				out.write(sendSpace.getText());
+				out.newLine();
+				out.flush();
+				sendSpace.setText("");
+
+			}catch(IOException ie){
+
+			}
+		}
+		});
+			
+        
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
@@ -59,9 +94,11 @@ public class server extends JFrame{
         
 	}
 	public static void main(String[] args){
-		server s = new server();
+		Server s = new Server();
 		s.setVisible(true);
-		s.setTitle("oooo");
+		s.setTitle("server");
+		s.setResizable(false);
 		s.setSize(350, 300);
+		
 	}
 }
