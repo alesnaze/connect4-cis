@@ -1,70 +1,90 @@
 package chat;
 
-import java.net.*;
-import java.io.*;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
-public class Client extends JFrame{
+import java.net.*;
+import java.io.*;
+
+import javax.swing.JOptionPane;
+
+public class Client extends JFrame implements Runnable{
 	
-	Socket socket;
-	DataInputStream in;
-	DataOutputStream out;
-	
-	JTextArea sendSpace;
+	JTextField sendSpace;
 	JTextArea recieveSpace;
 	JScrollPane sp_recieveSpace;
 	JScrollPane sp_sendSpace;
 	JButton send;
-	JButton connect;
 	
-	public Client() {
+	ServerSocket serverSocket = null;
+	Socket socket;
+	BufferedReader in = null;
+	BufferedWriter out = null;
+	
+	public void run() {
+		
+		while(true){
+			try{
+				InetAddress ia = socket.getInetAddress();
+				recieveSpace.append(ia.getHostName() + " : " + in.readLine() + "\n");
+			}catch(IOException e){
+
+			}
+		}
+	}
+	public Client(String ip) {
 		
 		setLayout(new FlowLayout(FlowLayout.LEFT, 10, 20));
 		
-		recieveSpace = new JTextArea(9,20);
-		add(recieveSpace);
-		
-		connect = new JButton("connect");
-		add(connect);
-		
-		sendSpace = new JTextArea(4,20);
-		add(sendSpace);
+		recieveSpace = new JTextArea(9,28);
+		sp_recieveSpace = new JScrollPane(recieveSpace);
+        add(sp_recieveSpace);
+        recieveSpace.setEditable(false);
+        
+        sendSpace = new JTextField(20);
+		sp_sendSpace = new JScrollPane(sendSpace);
+        add(sp_sendSpace);
 		
 		send = new JButton("send");
 		add(send);
+		
+		this.getRootPane().setDefaultButton(send); 
 
-		connect.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){
+
+		try {
+			
+			socket = new Socket(ip, 8000);
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream(),"UTF8"));
+			out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(),"UTF8"));
+			
+			
+			Thread t = new Thread(this);
+			t.start();
+			
+		}catch(IOException ioe) {
+
+		}
+		
+		
+		send.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){
+			
+			recieveSpace.append(" you : " + sendSpace.getText() + "\n");
+			
 			try {
-			
-				socket = new Socket("localhost", 8000);
-				in = new DataInputStream(socket.getInputStream());
-				out =new DataOutputStream(socket.getOutputStream());
-			
-			}catch(IOException ex){
-				System.err.println(e);
+						
+				out.write(sendSpace.getText());
+				out.newLine();
+				out.flush();
+				sendSpace.setText("");
+
+			}catch(IOException ie){
+
 			}
 		}
 		});
 		
-		send.addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){
-			
-			recieveSpace.append("Client : " + sendSpace.getText() + "\n");
-			
-			try {
-				
-				out.writeUTF(sendSpace.getText());
-				sendSpace.setText("");
-			
-			}catch(IOException ex){
-				System.err.println(ex);
-			}
-			
-			
-		}
-		});
 		
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -72,10 +92,16 @@ public class Client extends JFrame{
             }
         });
 	}
+	
 	public static void main(String[] args){
-		Client c = new Client();
+
+		String ip = JOptionPane.showInputDialog("enter server ip");
+		Client c = new Client(ip);
 		c.setVisible(true);
 		c.setSize(350,300);
-		c.setTitle("gggg");
+		c.setResizable(false);
+		c.setBackground(new Color(0,0,0));
+		c.setTitle("client");
+		
 	}
 }
