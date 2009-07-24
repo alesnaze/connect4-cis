@@ -25,6 +25,7 @@ public class DrawingOvals extends JFrame{
 		Panel panel = new Panel();
 		panel.setOpaque(false);
 		frame.add(panel, BorderLayout.CENTER);
+
 		frame.pack();
 	}
 
@@ -39,9 +40,10 @@ public class DrawingOvals extends JFrame{
 			}
 		});
 	}
-
-	// Painting the Circles and filling them
+	
+	// Creating an ArrayList that will hold the Ovals dimensions
 	ArrayList<Integer> positions = new ArrayList<Integer>();
+	// Painting the Circles and filling them
 	public void paint(Graphics g) {
 		super.paint(g);
 
@@ -55,16 +57,15 @@ public class DrawingOvals extends JFrame{
 
 				if (x>=ovalX && x<=50+ovalX) {
 					if (y>=ovalY && y<=50+ovalY) {
-						positions.add(ovalX+'.'+ovalY);
-						System.out.println(positions.size());
+						positions.add(i); // we have to change this "i" and put the circles dimensions
+						g.fillOval(ovalX, ovalY, 50, 50);
+//						System.out.println(positions.size());
 					}
 				}
-// TODO: read about Numbers and the "." notations
-//				g.fillOval(ovalX, ovalY, 50, 50);
 			}
 		}
 	}
-	
+
     public Dimension getPreferredSize() {
         return new Dimension(800,600);
     }
