@@ -8,13 +8,10 @@ class Panel extends JPanel {
 	/**
 	 * This class draws the game's Background image and sets its dimension
 	 * */
-	final Image image = new ImageIcon("src/images/Connect4_bg.png").getImage();
+	final Image image = new ImageIcon("src/images/connect4.png").getImage();
 
 	public Panel() {
 		repaint();
-		// JLabel label = new JLabel("hello");
-		// label.setForeground(Color.white);
-		// add(label);
 	}
 
 	// Drawing the image

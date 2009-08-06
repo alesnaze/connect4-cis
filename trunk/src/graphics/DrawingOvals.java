@@ -46,7 +46,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		frame.setVisible(true);
 		frame.setSize(800, 600);
 		frame.setTitle("Connect 4");
-		frame.setResizable(true);
+		frame.setResizable(false);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
 
 		// Adding the JPanel to the JFrame and edit their properties
