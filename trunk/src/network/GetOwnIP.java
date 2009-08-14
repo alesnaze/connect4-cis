@@ -10,8 +10,6 @@ public class GetOwnIP {
 	 * the specified port
 	 * */
 	public static void main(String[] args) throws Exception {
-		// A string for holding the IP address resulting from the following
-		// operation
 		String myStr = null;
 		// This loop gets the network interfaces that have assigned IP addresses
 		for (Enumeration<NetworkInterface> ifaces = NetworkInterface
@@ -30,7 +28,6 @@ public class GetOwnIP {
 			}
 			// omitting the unnecessary character "/"
 			myStr = myStr.substring(1);
-			System.out.println(myStr);
 			// Splitting the IP Address with the character "."
 			String[] temp = myStr.split("[.]");
 			int[] IP = new int[4];
