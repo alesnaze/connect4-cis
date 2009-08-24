@@ -63,7 +63,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		recieveSpace.setEditable(false);
 		cp.add(sendSpace);
 		cp.add(send);
-
+		frame.getRootPane().setDefaultButton(send);
 		frame.add(cp, BorderLayout.SOUTH);
 
 	}
@@ -112,7 +112,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	}
 
 	// Creating an ArrayList that will hold the Ovals dimensions
-	ArrayList<Integer> positions = new ArrayList<Integer>();
+	ArrayList<int[]> positions = new ArrayList<int[]>();
 
 	// Painting the Circles and filling them
 	public void paint(Graphics g) {
@@ -128,11 +128,18 @@ public class DrawingOvals extends JFrame implements Runnable {
 
 				if (x >= ovalX && x <= 50 + ovalX) {
 					if (y >= ovalY && y <= 50 + ovalY) {
-						positions.add(i); // we have to change this "i" and put
+						int[] p = new int[2];
+						p[0] = ovalX;
+						p[1] = ovalY;
+						positions.add(p);
 						// the circles dimensions
 						g.fillOval(ovalX, ovalY, 50, 50);
 						// System.out.println(positions.size());
 					}
+				}
+				for (int h = 0; h < positions.size(); h++) {
+					int[] arr = positions.get(h);
+					g.fillOval(arr[0], arr[1], 50, 50);
 				}
 			}
 		}
