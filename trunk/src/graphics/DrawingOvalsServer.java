@@ -46,7 +46,9 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		frame.setTitle("Connect 4");
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(frame.EXIT_ON_CLOSE);
-
+		final Image icon = new ImageIcon("src/images/Connect4Logo.png")
+				.getImage();
+		frame.setIconImage(icon);
 		// Adding the JPanel to the JFrame and edit their properties
 		Panel panel = new Panel();
 		panel.setOpaque(false);
@@ -127,7 +129,23 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 						int[] p = new int[2];
 						p[0] = ovalX;
 						p[1] = ovalY;
-						positions.add(p);
+						if (positions.isEmpty() == true) {
+							positions.add(p);
+						}
+						else {
+							boolean equals = false;
+							for (int z = 0; z < positions.size(); z++) {
+								int[] arr = positions.get(z);
+								if (arr[0] == p[0]) {
+									if (arr[1] == p[1]) {
+										equals = true;
+									}
+								}
+							}
+							if (equals == false) {
+								positions.add(p);
+							}
+						}
 						// the circles dimensions
 						System.out.println(positions.size());
 

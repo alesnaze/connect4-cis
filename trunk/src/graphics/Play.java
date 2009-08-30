@@ -27,6 +27,8 @@ public class Play extends JFrame {
 		setTitle("Main Menu");
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		final Image icon = new ImageIcon("src/images/Connect4Logo.png").getImage();
+		setIconImage(icon);
 		pack();
 		repaint();
 
@@ -73,23 +75,3 @@ public class Play extends JFrame {
 		return new Dimension(550, 400);
 	}
 }
-
-// eng Asmaa's code:
-/*
- * public void moveMade(Move aMove) { int column = aMove.toInt(); int row =
- * board.numerOfChipsInColumn(column) - 1;
- * 
- * if(aMove.maker().getNumber() == C4Board.FIRST_PLAYER_NUMBER) {
- * drawBlackToken(row,column); update(); } else { drawRedToken(row, column);
- * 
- * if(lastComputerMove != null) { clearRedTip(lastComputerMove.toInt()); }
- * 
- * drawRedTip(aMove.toInt()); lastComputerMove = aMove; update();
- * 
- * }
- * 
- * }
- * 
- * public void update() { Graphics g = this.getGraphics();
- * g.drawImage(offscreenImage,0,0, this); }
- */
