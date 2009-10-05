@@ -1,6 +1,7 @@
 package network;
 
 import java.net.*;
+import java.util.ArrayList;
 import java.io.IOException;
 
 public class PortScanner {
@@ -9,6 +10,8 @@ public class PortScanner {
 	 * of IPs The default IP is the local IP resulted from the GetOwnIP.java
 	 * class.
 	 * */
+	public ArrayList<String> IPsList = new ArrayList<String>();
+
 	public PortScanner(int[] IP) throws UnknownHostException, IOException {
 		/**
 		 * Given the IP address of the machine and the SubnetMask, this
@@ -97,7 +100,11 @@ public class PortScanner {
 							try {
 								InetAddress ia = InetAddress
 										.getByAddress(ipAddress);
-								scan(ia);
+								String x = scan(ia);
+								if (x != "None") {
+									System.out.println(x);
+									IPsList.add(x);
+								}
 							} catch (UnknownHostException ex) {
 								System.err.println(ipAddress
 										+ ": IP not valid.");
@@ -108,8 +115,8 @@ public class PortScanner {
 			}
 		}
 	}
-
-	public static void scan(InetAddress remote) {
+	
+	public static String scan(InetAddress remote) {
 		/**
 		 * This method is used for Scanning the given IPs for a specified port
 		 * and then tell whether the port is opened or not
@@ -118,12 +125,10 @@ public class PortScanner {
 		int port = 22;
 		try {
 			Socket s = new Socket(remote, port);
-			System.out.println("The host " + hostname
-					+ " is Reachable and is listening on port " + port);
 			s.close();
+			return hostname;
 		} catch (IOException ex) {
-			System.out.println("The host " + hostname
-					+ " is Reachable but it's NOT listening on port " + port);
+			return "None";
 		}
 	}
 

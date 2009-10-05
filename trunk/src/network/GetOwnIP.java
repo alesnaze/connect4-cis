@@ -1,5 +1,6 @@
 package network;
 
+import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
@@ -9,6 +10,10 @@ public class GetOwnIP {
 	 * then passes the IP(s) to the PortScannner.java class to scan the IP for
 	 * the specified port
 	 * */
+	public static int[] localIP = new int[4];
+	public static PortScanner x;
+	public static int len;
+	
 	public static void main(String[] args) throws Exception {
 		String myStr = null;
 		// This loop gets the network interfaces that have assigned IP addresses
@@ -30,12 +35,18 @@ public class GetOwnIP {
 			myStr = myStr.substring(1);
 			// Splitting the IP Address with the character "."
 			String[] temp = myStr.split("[.]");
-			int[] IP = new int[4];
 			for (int i = 0; i < temp.length; i++) {
 				int Obj2 = Integer.parseInt(temp[i]);
-				IP[i] = Obj2;
+				localIP[i] = Obj2;
 			}
-			new PortScanner(IP);
+			 x = new PortScanner(localIP);
+			 len =x.IPsList.size();
 		}
 	}
+	
+//	public String[] stringList() {
+//		PortScanner x = this.x;
+//		len = x.IPsList.size();
+//		return (String[]) x.IPsList.toArray();
+//	}
 }
