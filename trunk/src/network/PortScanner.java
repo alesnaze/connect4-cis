@@ -11,6 +11,7 @@ public class PortScanner {
 	 * class.
 	 * */
 	public ArrayList<String> IPsList = new ArrayList<String>();
+	boolean endIP = true ;
 
 	public PortScanner(int[] IP) throws UnknownHostException, IOException {
 		/**
@@ -67,7 +68,7 @@ public class PortScanner {
 				broadcastAddress[i] = Integer.parseInt(binaryBroadcastIP, 2);
 				networkAddress[i] = Integer.parseInt(binaryIP, 2);
 			}
-			while (true) {
+			while (endIP) {
 				// This loop is for scanning all the network IPs
 				boolean check = true;
 				int counter = 0;
@@ -79,7 +80,9 @@ public class PortScanner {
 						counter += 1;
 						if (counter == 4) {
 							// if the current IP is the broadcast IP, then Exit
-							System.exit(0);
+							endIP = false;
+							break;
+//							System.exit(0);
 						}
 					} else {
 						// if current IP is not the broadcast IP

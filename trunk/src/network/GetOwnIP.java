@@ -10,11 +10,12 @@ public class GetOwnIP {
 	 * then passes the IP(s) to the PortScannner.java class to scan the IP for
 	 * the specified port
 	 * */
-	public static int[] localIP = new int[4];
 	public static PortScanner x;
-	public static int len;
+	private String[] scannedIPs;
 	
-	public static void main(String[] args) throws Exception {
+	public GetOwnIP() throws Exception {
+		int[] localIP = new int[4];
+		String[] temp = new String[4];
 		String myStr = null;
 		// This loop gets the network interfaces that have assigned IP addresses
 		for (Enumeration<NetworkInterface> ifaces = NetworkInterface
@@ -22,31 +23,35 @@ public class GetOwnIP {
 			NetworkInterface iface = ifaces.nextElement();
 			// This loop gets the Addresses for the interface (IP and MAC
 			// Addresses)
-			for (Enumeration<InetAddress> addresses = iface.getInetAddresses(); addresses
-					.hasMoreElements();) {
+			if (ifaces.hasMoreElements() == false) break;
+			for (Enumeration<InetAddress> addresses = iface.getInetAddresses(); addresses.hasMoreElements()/*hasOneElement*/;) {
+				/*
+				 * ERROR: hasMoreElements() is always true if there's one or
+				 * more element in iface
+				 */
+
 				// As we won't be working on the localhost only, we'll ignore
 				// the Loop Back address
 				if (iface.isLoopback() == false) {
 					InetAddress address = addresses.nextElement();
 					myStr = address.toString();
 				}
+				if (addresses.hasMoreElements() == false) break;
 			}
 			// omitting the unnecessary character "/"
 			myStr = myStr.substring(1);
 			// Splitting the IP Address with the character "."
-			String[] temp = myStr.split("[.]");
+			temp = myStr.split("[.]");
 			for (int i = 0; i < temp.length; i++) {
 				int Obj2 = Integer.parseInt(temp[i]);
 				localIP[i] = Obj2;
 			}
-			 x = new PortScanner(localIP);
-			 len =x.IPsList.size();
+			x = new PortScanner(localIP);
+			scannedIPs = x.IPsList.toArray(new String[0]);
 		}
 	}
-	
-//	public String[] stringList() {
-//		PortScanner x = this.x;
-//		len = x.IPsList.size();
-//		return (String[]) x.IPsList.toArray();
-//	}
+
+	public String[] getScannedIPs() {
+		return scannedIPs;
+	}
 }
