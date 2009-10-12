@@ -24,8 +24,6 @@ public class AboutUs extends JFrame{
 		setTitle("About Us");
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		final Image icon = new ImageIcon("src/images/Connect4Logo.png").getImage();
-		setIconImage(icon);
 		pack();
 		repaint();
 		
