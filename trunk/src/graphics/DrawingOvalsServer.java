@@ -20,6 +20,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	JTextArea recieveSpace = new JTextArea(4, 65);
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
 	JButton send = new JButton("send");
+	JButton replay = new JButton("replay");
 
 	ServerSocket serverSocket = null;
 	Socket socket;
@@ -62,6 +63,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		recieveSpace.setEditable(false);
 		cp.add(sendSpace);
 		cp.add(send);
+		cp.add(replay);
 		frame.getRootPane().setDefaultButton(send);
 		frame.add(cp, BorderLayout.SOUTH);
 	}
@@ -101,7 +103,13 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 				}
 			}
 		});
-
+		replay.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                DrawingOvals x=new DrawingOvals();
+                x.hide();
+                mainFrame();    
+    }
+        });
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseClick) {
 				x = mouseClick.getX();
