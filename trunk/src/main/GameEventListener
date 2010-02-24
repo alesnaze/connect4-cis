@@ -1,0 +1,14 @@
+public interface GameEventListener  \\  Events include, GameStarted, GameStopped, GameRestarted, and moves i will use in game master class
+{
+   
+    public void gameStarted();  \\ The game started
+     
+    public void gameStoped();  \\  The game stopped
+  
+   
+    public void gameRestarted();  \\ The game restarted
+ 
+    public void moveMade(Move aMove); // A player  moved
+  
+}
+
