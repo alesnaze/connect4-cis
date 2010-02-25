@@ -26,7 +26,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	/**
 	 * This class draws the game's Background image and sets its dimension
 	 * */
-	
+
 	final Image image = new ImageIcon("src/images/chat.png").getImage();
 
 	// define chat components
@@ -35,22 +35,32 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
 	public JButton send = new JButton("send");
 	public JButton replay = new JButton("replay");
-	int lineSpace = 0;
+	int lineSpace = 30;
 	String printString;
+	String name = DrawingOvalsServer.name;
+	public static String name2;
 
 	// define socket and buffer for connection
 	ServerSocket serverSocket = null;
 	Socket socket;
 	BufferedReader in = null;
 	BufferedWriter out = null;
+	boolean splitOnce;
 
 	// thread method to allow receiving messages from chat
 	public void run() {
 		while (true) {
 			try {
 				InetAddress ia = socket.getInetAddress();
-				printString = ia.getHostName() + " : " + in.readLine() + "\n";
-				printText();
+				if (splitOnce == true) {
+					String str = in.readLine();
+					String[] splitted = str.split(":");
+					name2 = splitted[0];
+					splitOnce = false;
+				} else {
+					printString = in.readLine() + "\n";
+					printText();
+				}
 			} catch (IOException e) {
 			}
 		}
@@ -61,7 +71,8 @@ public class ChatPanelServer extends JPanel implements Runnable {
 
 		// add chat components
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 12));
-		sp_recieveSpace.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		sp_recieveSpace
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		recieveSpace.setEditable(false);
 		recieveSpace.setLineWrap(true);
 		this.add(sp_recieveSpace);
@@ -78,7 +89,10 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					.getInputStream(), "UTF8"));
 			out = new BufferedWriter(new OutputStreamWriter(socket
 					.getOutputStream(), "UTF8"));
-
+			splitOnce = true;
+			out.write(name + ": ");
+			out.newLine();
+			out.flush();
 			Thread t = new Thread(this);
 			t.start();
 
@@ -89,17 +103,14 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		// the action of sending message to the client
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				printString = " you : " + sendSpace.getText() + "\n" ; 
+				printString = name + ": " + sendSpace.getText() + "\n";
 				printText();
-
 				try {
-					out.write(sendSpace.getText());
+					out.write(name + ": " + sendSpace.getText());
 					out.newLine();
 					out.flush();
 					sendSpace.setText("");
 				} catch (IOException ie) {
-
 				}
 			}
 		});
@@ -120,7 +131,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	public Dimension getPreferredSize() {
 		return new Dimension(800, 150);
 	}
-	
+
 	public void printText() {
 		recieveSpace.append(printString);
 		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15));
