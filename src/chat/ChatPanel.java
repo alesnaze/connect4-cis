@@ -35,36 +35,43 @@ public class ChatPanel extends JPanel implements Runnable {
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
 	public JButton send = new JButton("send");
 	public JButton replay = new JButton("replay");
-	int lineSpace = 0;
+	int lineSpace = 30;
 	String printString;
-	
+	String name = DrawingOvals.name;
+	public static String name2;
+
 	// define socket and buffer for connection
 	Socket socket;
 	BufferedReader in = null;
 	BufferedWriter out = null;
+	boolean splitOnce;
 
 	// thread method to allow receiving messages from chat
 	public void run() {
-
 		while (true) {
 			try {
 				InetAddress ia = socket.getInetAddress();
-				printString = ia.getHostName() + " : " + in.readLine() + "\n";
-				printText();
+				if (splitOnce == true) {
+					String str = in.readLine();
+					String[] splitted = str.split(":");
+					name2 = splitted[0];
+					splitOnce = false;
+				} else {
+					printString = in.readLine() + "\n";
+					printText();
+				}
 			} catch (IOException e) {
-
 			}
 		}
 	}
 
 	public ChatPanel() {
-
 		repaint();
 
 		// add chat components
-
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 12));
-		sp_recieveSpace.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		sp_recieveSpace
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		recieveSpace.setEditable(false);
 		recieveSpace.setLineWrap(true);
 		this.add(sp_recieveSpace);
@@ -73,16 +80,17 @@ public class ChatPanel extends JPanel implements Runnable {
 		this.add(replay);
 
 		// this.getRootPane().setDefaultButton(send);
-
 		// connection to the server socket
 		try {
-
 			socket = new Socket("localhost", 8000);
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream(), "UTF8"));
 			out = new BufferedWriter(new OutputStreamWriter(socket
 					.getOutputStream(), "UTF8"));
-
+			splitOnce = true;
+			out.write(name + ": ");
+			out.newLine();
+			out.flush();
 			Thread t = new Thread(this);
 			t.start();
 
@@ -93,10 +101,10 @@ public class ChatPanel extends JPanel implements Runnable {
 		// the action of sending message to the server
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				printString = " you : " + sendSpace.getText() + "\n";
+				printString = name + ": " + sendSpace.getText() + "\n";
 				printText();
 				try {
-					out.write(sendSpace.getText());
+					out.write(name + ": " + sendSpace.getText());
 					out.newLine();
 					out.flush();
 					sendSpace.setText("");
@@ -104,7 +112,6 @@ public class ChatPanel extends JPanel implements Runnable {
 				}
 			}
 		});
-
 		replay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DrawingOvals.replayGame();
@@ -113,18 +120,16 @@ public class ChatPanel extends JPanel implements Runnable {
 	}
 
 	// Drawing the image
-
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(image, 0, 0, this);
-
 	}
 
 	// Setting the JPanel's Size
 	public Dimension getPreferredSize() {
-
 		return new Dimension(800, 150);
 	}
+
 	public void printText() {
 		recieveSpace.append(printString);
 		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15));

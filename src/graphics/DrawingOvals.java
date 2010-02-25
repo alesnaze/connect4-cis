@@ -21,6 +21,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 	static DataInputStream in = null;
 	static DataOutputStream out = null;
 	public static InetAddress ia;
+	private JLabel clientLabel, serverLabel, clientPlayer, serverPlayer,
+	clientScore, serverScore, redLabel, greenLabel;
+	public static String name;
 	int serverWin = 0;
 	int clientWin = 0;
 
@@ -56,6 +59,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 					} else if (PLAYER == 0) {
 						getLbl(yIndex2, xIndex2);
 						serverWin += 1;
+						serverScore.setText("Score:  " + serverWin);
 //						replayGame();
 						PLAYER = 1;
 					} else {
@@ -68,24 +72,67 @@ public class DrawingOvals extends JFrame implements Runnable {
 		}
 	}
 
+	Panel panel;
+	
 	public DrawingOvals() {
 		// Creating the Frame and setting it's properties [visibility, size,
 		// resizability and closing]
 		this.setVisible(true);
 		this.setSize(800, 600);
 		this.setTitle("Connect 4");
+        name=JOptionPane.showInputDialog(null,"enter your name");
+        clientLabel = new JLabel("Player 2");
+        clientLabel.setForeground(new java.awt.Color(254, 254, 254));
+        clientLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+        serverLabel = new JLabel("Player 1");
+        serverLabel.setForeground(new java.awt.Color(254, 254, 254));
+        serverLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+        clientPlayer = new JLabel(name);
+        clientPlayer.setForeground(new java.awt.Color(254, 254, 254));
+        serverPlayer = new JLabel();
+        serverPlayer.setForeground(new java.awt.Color(254, 254, 254));
+        clientScore = new JLabel("Score:  " + clientWin);
+        clientScore.setForeground(new java.awt.Color(254, 254, 254));
+        serverScore = new JLabel("Score:  " + serverWin);
+        serverScore.setForeground(new java.awt.Color(254, 254, 254));
+        greenLabel = new JLabel();
+		greenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(
+				"/images/green.png")));
+		greenLabel.setMaximumSize(new java.awt.Dimension(60, 60));
+		greenLabel.setMinimumSize(new java.awt.Dimension(60, 60));
+		redLabel = new JLabel();
+		redLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(
+				"/images/red.png")));
+		redLabel.setMaximumSize(new java.awt.Dimension(60, 60));
+		redLabel.setMinimumSize(new java.awt.Dimension(60, 60));
 		this.setResizable(false);
 		this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
 		final Image icon = new ImageIcon("src/images/Connect4Logo.png")
 				.getImage();
 		this.setIconImage(icon);
 
-		// Adding the JPanel to the Jthis and edit their properties
-		Panel panel = new Panel(false);
+		// Adding the JPanel to the JFrame and edit their properties
+		panel = new Panel(false);
 		panel.setOpaque(false);
 		Panel p = new Panel(true);
 		p.setLayout(new FlowLayout(FlowLayout.LEFT, 185, 28));
 		p.add(panel);
+		this.add(clientLabel);
+		clientLabel.setBounds(645, 100, 135, 35);
+		this.add(serverLabel);
+		serverLabel.setBounds(25, 100, 135, 35);
+		this.add(clientPlayer);
+		clientPlayer.setBounds(665, 140, 135, 35);
+		this.add(serverPlayer);
+		serverPlayer.setBounds(45, 140, 135, 35);
+		this.add(clientScore);
+		clientScore.setBounds(665, 185, 135, 35);
+		this.add(serverScore);
+		serverScore.setBounds(45, 185, 135, 35);
+		this.add(greenLabel);
+		greenLabel.setBounds(45, 250, 60, 60);
+		this.add(redLabel);
+		redLabel.setBounds(665, 250, 60, 60);
 		this.add(p);
 		this.pack();
 
@@ -95,9 +142,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 		// make send button the default button
 		// when pressing enter
 		cp.getRootPane().setDefaultButton(cp.send);
-
+		
+		serverPlayer.setText(ChatPanel.name2);
 		// connection to the server socket
-
 		try {
 			socket = new Socket("localhost", 8451);
 			in = new DataInputStream(socket.getInputStream());
@@ -167,9 +214,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 0);
 										clientWin += 1;
-										System.out.println("Server: "
-												+ serverWin + "\tClient: "
-												+ clientWin);
+										clientScore.setText("Score:  " + clientWin);
 										JOptionPane.showMessageDialog(null,
 												"you win");
 									}
