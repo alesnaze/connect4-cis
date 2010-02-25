@@ -28,7 +28,6 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	 * */
 
 	final Image image = new ImageIcon("src/images/chat.png").getImage();
-
 	// define chat components
 	JTextField sendSpace = new JTextField(55);
 	JTextArea recieveSpace = new JTextArea(4, 65);
@@ -39,6 +38,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	String printString;
 	String name = DrawingOvalsServer.name;
 	public static String name2;
+	public static Thread t;
 
 	// define socket and buffer for connection
 	ServerSocket serverSocket = null;
@@ -62,13 +62,14 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					printText();
 				}
 			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Error connecting to the Client", "Error", JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
 			}
 		}
 	}
 
 	public ChatPanelServer() {
 		repaint();
-
 		// add chat components
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 12));
 		sp_recieveSpace
@@ -93,11 +94,11 @@ public class ChatPanelServer extends JPanel implements Runnable {
 			out.write(name + ": ");
 			out.newLine();
 			out.flush();
-			Thread t = new Thread(this);
+			t = new Thread(this);
 			t.start();
-
 		} catch (IOException ioe) {
-
+			JOptionPane.showMessageDialog(null, "Error occured while creating server socket", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
 		}
 
 		// the action of sending message to the client
