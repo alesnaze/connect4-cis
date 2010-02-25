@@ -39,6 +39,7 @@ public class ChatPanel extends JPanel implements Runnable {
 	String printString;
 	String name = DrawingOvals.name;
 	public static String name2;
+	public static Thread t;
 
 	// define socket and buffer for connection
 	Socket socket;
@@ -61,6 +62,8 @@ public class ChatPanel extends JPanel implements Runnable {
 					printText();
 				}
 			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "Error connecting to the Server", "Error", JOptionPane.ERROR_MESSAGE);
+				System.exit(0);
 			}
 		}
 	}
@@ -91,11 +94,12 @@ public class ChatPanel extends JPanel implements Runnable {
 			out.write(name + ": ");
 			out.newLine();
 			out.flush();
-			Thread t = new Thread(this);
+			t = new Thread(this);
 			t.start();
 
 		} catch (IOException ioe) {
-
+			JOptionPane.showMessageDialog(null, "Could not connect to server", "Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
 		}
 
 		// the action of sending message to the server
@@ -109,6 +113,7 @@ public class ChatPanel extends JPanel implements Runnable {
 					out.flush();
 					sendSpace.setText("");
 				} catch (IOException ie) {
+					JOptionPane.showMessageDialog(null, "Error in Connection", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

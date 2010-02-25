@@ -8,6 +8,7 @@ import java.net.*;
 import javax.swing.*;
 
 import chat.ChatPanel;
+import chat.ChatPanelServer;
 
 public class DrawingOvals extends JFrame implements Runnable {
 	/**
@@ -22,7 +23,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	static DataOutputStream out = null;
 	public static InetAddress ia;
 	private JLabel clientLabel, serverLabel, clientPlayer, serverPlayer,
-	clientScore, serverScore, redLabel, greenLabel;
+			clientScore, serverScore, redLabel, greenLabel;
 	public static String name;
 	int serverWin = 0;
 	int clientWin = 0;
@@ -60,42 +61,46 @@ public class DrawingOvals extends JFrame implements Runnable {
 						getLbl(yIndex2, xIndex2);
 						serverWin += 1;
 						serverScore.setText("Score:  " + serverWin);
-//						replayGame();
-						PLAYER = 1;
 					} else {
 						getLbl(yIndex2, xIndex2);
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				ChatPanel.t.stop();
+				JOptionPane.showMessageDialog(null,
+						"Error connecting to the Server", "Error",
+						JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
 			}
 		}
 	}
 
 	Panel panel;
-	
+
 	public DrawingOvals() {
 		// Creating the Frame and setting it's properties [visibility, size,
 		// resizability and closing]
 		this.setVisible(true);
 		this.setSize(800, 600);
 		this.setTitle("Connect 4");
-        name=JOptionPane.showInputDialog(null,"enter your name");
-        clientLabel = new JLabel("Player 2");
-        clientLabel.setForeground(new java.awt.Color(254, 254, 254));
-        clientLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
-        serverLabel = new JLabel("Player 1");
-        serverLabel.setForeground(new java.awt.Color(254, 254, 254));
-        serverLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
-        clientPlayer = new JLabel(name);
-        clientPlayer.setForeground(new java.awt.Color(254, 254, 254));
-        serverPlayer = new JLabel();
-        serverPlayer.setForeground(new java.awt.Color(254, 254, 254));
-        clientScore = new JLabel("Score:  " + clientWin);
-        clientScore.setForeground(new java.awt.Color(254, 254, 254));
-        serverScore = new JLabel("Score:  " + serverWin);
-        serverScore.setForeground(new java.awt.Color(254, 254, 254));
-        greenLabel = new JLabel();
+		while (name == null || name.length() == 0) {
+			name = JOptionPane.showInputDialog(null, "enter your name");
+		}
+		clientLabel = new JLabel("Player 2");
+		clientLabel.setForeground(new java.awt.Color(254, 254, 254));
+		clientLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+		serverLabel = new JLabel("Player 1");
+		serverLabel.setForeground(new java.awt.Color(254, 254, 254));
+		serverLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+		clientPlayer = new JLabel(name);
+		clientPlayer.setForeground(new java.awt.Color(254, 254, 254));
+		serverPlayer = new JLabel();
+		serverPlayer.setForeground(new java.awt.Color(254, 254, 254));
+		clientScore = new JLabel("Score:  " + clientWin);
+		clientScore.setForeground(new java.awt.Color(254, 254, 254));
+		serverScore = new JLabel("Score:  " + serverWin);
+		serverScore.setForeground(new java.awt.Color(254, 254, 254));
+		greenLabel = new JLabel();
 		greenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(
 				"/images/green.png")));
 		greenLabel.setMaximumSize(new java.awt.Dimension(60, 60));
@@ -142,7 +147,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		// make send button the default button
 		// when pressing enter
 		cp.getRootPane().setDefaultButton(cp.send);
-		
+
 		serverPlayer.setText(ChatPanel.name2);
 		// connection to the server socket
 		try {
@@ -154,7 +159,10 @@ public class DrawingOvals extends JFrame implements Runnable {
 			t.start();
 
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			ChatPanel.t.stop();
+			JOptionPane.showMessageDialog(null, "Could not connect to server",
+					"Error", JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
 		}
 
 		panel.setLayout(new GridLayout(6, 7));
@@ -191,12 +199,20 @@ public class DrawingOvals extends JFrame implements Runnable {
 						// getting the X and Y indexes
 						int xIndex = (ovalX - 130) / 60;
 						int yIndex = ovalY / 60;
-
 						boolean isFull = ICheck.checkFull(full);
 						try {
 							if (isFull == true) {
-								JOptionPane.showMessageDialog(null,
-										"The board is full");
+								String[] options = { "Replay", "Exit" };
+								int option = JOptionPane.showOptionDialog(null,
+										"The board is full.", "Full board",
+										JOptionPane.YES_NO_OPTION,
+										JOptionPane.INFORMATION_MESSAGE, null,
+										options, options[0]);
+								if (option == 0) {
+									replayGame();
+								} else {
+									System.exit(0);
+								}
 							} else {
 								int row = ICheck.checkColumn(xIndex, img, jlbl);
 								if (row == -1)
@@ -206,7 +222,8 @@ public class DrawingOvals extends JFrame implements Runnable {
 									full++;
 									yIndex = row + 1;
 									jlbl[yIndex - 1][xIndex - 1].setIcon(red);
-									String win =  ICheck.checkwin( jlbl, red,green); 
+									String win = ICheck.checkwin(jlbl, red,
+											green);
 									if (win == "none")
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 2);
@@ -214,7 +231,8 @@ public class DrawingOvals extends JFrame implements Runnable {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 0);
 										clientWin += 1;
-										clientScore.setText("Score:  " + clientWin);
+										clientScore.setText("Score:  "
+												+ clientWin);
 										JOptionPane.showMessageDialog(null,
 												"you win");
 									}
@@ -224,7 +242,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 							}
 
 						} catch (IOException ie) {
-							ie.printStackTrace();
+							JOptionPane.showMessageDialog(null,
+									"Error in Connection", "Error",
+									JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
@@ -234,7 +254,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 
 	public void getLbl(int yIndex2, int xIndex2) {
 		jlbl[yIndex2 - 1][xIndex2 - 1].setIcon(green);
-		String winn =  ICheck.checkwin( jlbl, red,green);
+		String winn = ICheck.checkwin(jlbl, red, green);
 	}
 
 	public Dimension getPreferredSize() {
@@ -243,18 +263,38 @@ public class DrawingOvals extends JFrame implements Runnable {
 
 	public static void replayGame() {
 		// replaying game by resetting the board to its initial state
-		full = 0;
-		for (int i = 0; i < 6; i++) {
-			for (int j = 0; j < 7; j++) {
-				jlbl[i][j].setIcon(img);
+		if (PLAYER == 3) {
+			full = 0;
+			for (int i = 0; i < 6; i++) {
+				for (int j = 0; j < 7; j++) {
+					jlbl[i][j].setIcon(img);
+				}
 			}
 		}
+		
 		// informing the Server with the Replay status
-		if (PLAYER != 3) {
-			try {
-				out.writeUTF(0 + "x" + 0 + "x" + 3);
-			} catch (IOException e) {
-				e.printStackTrace();
+		else {
+			String[] options = { "Yes", "No", "Exit" };
+			int option = JOptionPane.showOptionDialog(null,
+					"Are you sure you want to replay?", "Full board",
+					JOptionPane.YES_NO_CANCEL_OPTION,
+					JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+			if (option == 0) {
+				full = 0;
+				for (int i = 0; i < 6; i++) {
+					for (int j = 0; j < 7; j++) {
+						jlbl[i][j].setIcon(img);
+					}
+				}
+				try {
+					out.writeUTF(0 + "x" + 0 + "x" + 3);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Error in Connection",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			else if (option == 2) {
+				System.exit(0);
 			}
 		}
 	}
