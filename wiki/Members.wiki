@@ -1,0 +1,12 @@
+= Project Members =
+
+  * Abdallah Saeed
+    * Is the Connect4 *Project Manager/Team Leader*
+    * Java & Python Developer
+    * RedHat Linux System Engineer
+    * 2D Graphics Designer
+  * Asmaa Ali
+  * Basma
+  * Dina Ramadan
+  * Hend
+  * Islam Morsy
