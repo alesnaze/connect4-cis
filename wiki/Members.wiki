@@ -1,12 +1,13 @@
 = Project Members =
 
-  * Abdallah Saeed
+=== Abdallah Saeed ===
     * Is the Connect4 *Project Manager/Team Leader*
     * Java & Python Developer
     * RedHat Linux System Engineer
     * 2D Graphics Designer
-  * Asmaa Ali
-  * Basma
-  * Dina Ramadan
-  * Hend
-  * Islam Morsy
+    * mail: *fci_boody@yahoo.com*
+=== Asmaa Ali ===
+=== Basma ===
+=== Dina Ramadan ===
+=== Hend ===
+=== Islam Morsy ===
