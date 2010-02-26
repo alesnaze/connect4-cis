@@ -8,8 +8,8 @@ This game is created by a group of a 4th-grade CIS students in Mansoura universi
 
 
 == Pages ==
-  * About [Connect4]
-  * [Applications] and Tools
-  * Open Source
-  * Project [Members]
-  * What's New?
+  * About [http://code.google.com/p/connect4-cis/wiki/Connect4 Connect4]
+  * [http://code.google.com/p/connect4-cis/wiki/Applications Applications] and Tools
+  * [http://code.google.com/p/connect4-cis/wiki/Open_Source Open Source]
+  * Project [http://code.google.com/p/connect4-cis/wiki/Members Members]
+  * [http://code.google.com/p/connect4-cis/wiki/Whats_New What's New?]
