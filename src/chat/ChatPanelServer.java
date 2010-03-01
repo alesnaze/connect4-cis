@@ -11,6 +11,8 @@ import graphics.Play;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -29,11 +31,14 @@ public class ChatPanelServer extends JPanel implements Runnable {
 
 	final Image image = new ImageIcon("src/images/chat.png").getImage();
 	// define chat components
-	JTextField sendSpace = new JTextField(55);
-	JTextArea recieveSpace = new JTextArea(4, 65);
+
+	JTextField sendSpace = new JTextField(53);
+	JTextArea recieveSpace = new JTextArea(5, 62);
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
+	JLabel sendlbl = new JLabel(">");
 	public JButton send = new JButton("send");
 	public JButton replay = new JButton("replay");
+	public JButton exit = new JButton("Exit");
 	int lineSpace = 30;
 	String printString;
 	String name = DrawingOvalsServer.name;
@@ -62,7 +67,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					printText();
 				}
 			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null, "Error connecting to the Client", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null,
+						"Error connecting to the Client", "Error",
+						JOptionPane.ERROR_MESSAGE);
 				System.exit(1);
 			}
 		}
@@ -70,16 +77,32 @@ public class ChatPanelServer extends JPanel implements Runnable {
 
 	public ChatPanelServer() {
 		repaint();
+
 		// add chat components
-		this.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 12));
+		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 8));
 		sp_recieveSpace
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		recieveSpace.setEditable(false);
 		recieveSpace.setLineWrap(true);
+		recieveSpace.setBackground(new Color(108, 114, 146));
+		recieveSpace.setFont(new Font(null, 1, 12));
+		recieveSpace.setForeground(new Color(0, 0, 58));
+		sp_recieveSpace.setBorder(null);
+		sendSpace.setOpaque(false);
+		sendSpace.setForeground(new Color(0, 0, 58));
+		sendSpace.setBorder(null);
+		sendSpace.setFont(new Font(null, 1, 12));
+		sendSpace
+				.setToolTipText("Write here then press \"send\" to chat with the other player");
+		sendlbl.setFont(new Font(null, 1, 12));
+		sendlbl.setForeground(new Color(0, 85, 0));
+
 		this.add(sp_recieveSpace);
+		this.add(sendlbl);
 		this.add(sendSpace);
 		this.add(send);
 		this.add(replay);
+		this.add(exit);
 
 		// opening the socket and accepting connection from client
 		try {
@@ -97,7 +120,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 			t = new Thread(this);
 			t.start();
 		} catch (IOException ioe) {
-			JOptionPane.showMessageDialog(null, "Error occured while creating server socket", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,
+					"Error occured while creating server socket", "Error",
+					JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
 		}
 
@@ -112,12 +137,30 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					out.flush();
 					sendSpace.setText("");
 				} catch (IOException ie) {
+					JOptionPane.showMessageDialog(null,
+							"Error occured while creating server socket",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					System.exit(1);
 				}
 			}
 		});
 		replay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DrawingOvalsServer.replayGame();
+			}
+		});
+
+		exit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String[] options = { "Yes", "No" };
+				int option = JOptionPane.showOptionDialog(null,
+						"Are you sure you want to exit?", "Replay?",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE, null, options,
+						options[1]);
+				if (option == 0) {
+					System.exit(0);
+				}
 			}
 		});
 	}
