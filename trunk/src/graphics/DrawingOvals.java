@@ -204,7 +204,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 							if (isFull == true) {
 								String[] options = { "Replay", "Exit" };
 								int option = JOptionPane.showOptionDialog(null,
-										"The board is full.", "Full board",
+										"The board is full.", "Replay?",
 										JOptionPane.YES_NO_OPTION,
 										JOptionPane.INFORMATION_MESSAGE, null,
 										options, options[0]);
@@ -276,9 +276,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 		else {
 			String[] options = { "Yes", "No", "Exit" };
 			int option = JOptionPane.showOptionDialog(null,
-					"Are you sure you want to replay?", "Full board",
+					"Are you sure you want to replay?", "Replay?",
 					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					JOptionPane.INFORMATION_MESSAGE, null, options, options[1]);
 			if (option == 0) {
 				full = 0;
 				for (int i = 0; i < 6; i++) {
@@ -294,7 +294,15 @@ public class DrawingOvals extends JFrame implements Runnable {
 				}
 			}
 			else if (option == 2) {
-				System.exit(0);
+				String[] eOptions = { "Yes", "No" };
+				int eOption = JOptionPane.showOptionDialog(null,
+						"Are you sure you want to exit?", "Replay?",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE, null, eOptions,
+						eOptions[1]);
+				if (eOption == 0) {
+					System.exit(0);
+				}
 			}
 		}
 	}
