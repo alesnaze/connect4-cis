@@ -43,7 +43,7 @@ public class AboutUs extends JFrame{
 				}
 			}
 		});
-	}
+	} // end constructor set of "about us" frame
 
 	final Image image = new ImageIcon("src/images/AboutUs.png").getImage();
 	public void paint(Graphics g) {

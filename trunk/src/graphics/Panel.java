@@ -18,7 +18,6 @@ class Panel extends JPanel {
 		else {
 			background = false;
 		}
-//		repaint();
 	}
 
 	// Drawing the image
