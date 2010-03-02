@@ -22,11 +22,12 @@ public class DrawingOvals extends JFrame implements Runnable {
 	static DataInputStream in = null;
 	static DataOutputStream out = null;
 	public static InetAddress ia;
+	// this to show name and score on the panel for each player
 	private JLabel clientLabel, serverLabel, clientPlayer, serverPlayer,
-			clientScore, serverScore, redLabel, greenLabel;
+			clientScore, serverScore, redLabel, greenLabel;// this to show name and score on the panel for each player
 	public static String name;
-	int serverWin = 0;
-	int clientWin = 0;
+	int serverWin = 0; // intial value of score for server" player1"
+	int clientWin = 0; // intial value of score for client"player2"
 
 	int x, y;
 
@@ -141,13 +142,13 @@ public class DrawingOvals extends JFrame implements Runnable {
 		this.add(p);
 		this.pack();
 
-		// adding chat panel to the this
+		// adding chat panel to the the main panel
 		ChatPanel cp = new ChatPanel();
 		this.add(cp, BorderLayout.SOUTH);
 		// make send button the default button
 		// when pressing enter
 		cp.getRootPane().setDefaultButton(cp.send);
-
+		ChatPanel.sendSpace.requestFocus();
 		serverPlayer.setText(ChatPanel.name2);
 		// connection to the server socket
 		try {

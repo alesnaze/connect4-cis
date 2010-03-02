@@ -32,7 +32,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	final Image image = new ImageIcon("src/images/chat.png").getImage();
 	// define chat components
 
-	JTextField sendSpace = new JTextField(53);
+	public static JTextField sendSpace = new JTextField(53);
 	JTextArea recieveSpace = new JTextArea(5, 62);
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
 	JLabel sendlbl = new JLabel(">");

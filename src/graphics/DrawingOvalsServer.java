@@ -144,7 +144,9 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		this.add(cps, BorderLayout.SOUTH);
 		// make send button the default button when pressing enter
 		cps.getRootPane().setDefaultButton(cps.send);
+		ChatPanelServer.sendSpace.requestFocus();
 		clientPlayer.setText(ChatPanelServer.name2);
+		
 		// opening the socket and accepting connection from client
 		try {
 			serverSocket = new ServerSocket(8451);
