@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import chat.ChatPanel;
 import chat.ChatPanelServer;
+import mp3.MP3;
 
 public class DrawingOvals extends JFrame implements Runnable {
 	/**
@@ -62,12 +63,21 @@ public class DrawingOvals extends JFrame implements Runnable {
 						getLbl(yIndex2, xIndex2);
 						serverWin += 1;
 						serverScore.setText("Score:  " + serverWin);
+						File filename = new File("src/sounds/boo-03.mp3");// playing mp3 file
+                        MP3 mp3 = new MP3(filename);
+                        mp3.play();
 					} else {
 						getLbl(yIndex2, xIndex2);
+						File filename = new File("src/sounds/sound6.mp3");// playing mp3 file
+                        MP3 mp3 = new MP3(filename);
+                        mp3.play();
 					}
 				}
 			} catch (IOException e) {
 				ChatPanel.t.stop();
+				File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
+                MP3 mp3 = new MP3(filename);
+                mp3.play();
 				JOptionPane.showMessageDialog(null,
 						"Error connecting to the Server", "Error",
 						JOptionPane.ERROR_MESSAGE);
@@ -161,6 +171,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 
 		} catch (IOException ioe) {
 			ChatPanel.t.stop();
+			File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
+            MP3 mp3 = new MP3(filename);
+            mp3.play();
 			JOptionPane.showMessageDialog(null, "Could not connect to server",
 					"Error", JOptionPane.ERROR_MESSAGE);
 			System.exit(1);
@@ -203,6 +216,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 						boolean isFull = ICheck.checkFull(full);
 						try {
 							if (isFull == true) {
+								File filename = new File("src/sounds/alert.mp3");
+                                MP3 mp3 = new MP3(filename);
+                                mp3.play();
 								String[] options = { "Replay", "Exit" };
 								int option = JOptionPane.showOptionDialog(null,
 										"The board is full.", "Replay?",
@@ -225,15 +241,22 @@ public class DrawingOvals extends JFrame implements Runnable {
 									jlbl[yIndex - 1][xIndex - 1].setIcon(red);
 									String win = ICheck.checkwin(jlbl, red,
 											green);
-									if (win == "none")
+									if (win == "none") {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 2);
+										File filename = new File("src/sounds/sound6.mp3");// playing mp3 file
+                                        MP3 mp3 = new MP3(filename);
+                                        mp3.play();
+									}
 									else {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 0);
 										clientWin += 1;
 										clientScore.setText("Score:  "
 												+ clientWin);
+										File filename = new File("src/sounds/app-15.mp3");// playing mp3 file 
+                                        MP3 mp3 = new MP3(filename);
+                                        mp3.play();
 										JOptionPane.showMessageDialog(null,
 												"you win");
 									}
@@ -243,6 +266,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 							}
 
 						} catch (IOException ie) {
+							File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
+                            MP3 mp3 = new MP3(filename);
+                            mp3.play();
 							JOptionPane.showMessageDialog(null,
 									"Error in Connection", "Error",
 									JOptionPane.ERROR_MESSAGE);
@@ -275,6 +301,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 		
 		// informing the Server with the Replay status
 		else {
+			File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
+            MP3 mp3 = new MP3(filename);
+            mp3.play();
 			String[] options = { "Yes", "No", "Exit" };
 			int option = JOptionPane.showOptionDialog(null,
 					"Are you sure you want to replay?", "Replay?",
@@ -290,11 +319,17 @@ public class DrawingOvals extends JFrame implements Runnable {
 				try {
 					out.writeUTF(0 + "x" + 0 + "x" + 3);
 				} catch (IOException e) {
+					File filename1 = new File("src/sounds/alert.mp3");// playing mp3 file 
+                    MP3 mp31 = new MP3(filename1);
+                    mp31.play();
 					JOptionPane.showMessageDialog(null, "Error in Connection",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			else if (option == 2) {
+				File filename2 = new File("src/sounds/alert.mp3");// playing mp3 file 
+                MP3 mp32 = new MP3(filename2);
+                mp32.play();
 				String[] eOptions = { "Yes", "No" };
 				int eOption = JOptionPane.showOptionDialog(null,
 						"Are you sure you want to exit?", "Replay?",
