@@ -3,9 +3,12 @@ package graphics;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+
 import javax.swing.*;
 
 import network.NewJFrame;
+import mp3.MP3;
 
 public class Play extends JFrame {
 	/**
@@ -39,6 +42,9 @@ public class Play extends JFrame {
 				x = mouseClick.getX();
 				y = mouseClick.getY();
 				if (x >= 190 && x <= 370) {
+					File filename = new File("src/sounds/sound11.mp3");// playing mp3 file
+                    MP3 mp3 = new MP3(filename);
+                    mp3.play();
 					if (y >= 175 && y <= 225) {
 						// When clicking the "Create Server" button, it'll
 						// redirect you to the "DrawingOvalsServer.java" class

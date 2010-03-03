@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -23,6 +24,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.*;
+import mp3.MP3;
 
 public class ChatPanelServer extends JPanel implements Runnable {
 	/**
@@ -57,6 +59,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		while (true) {
 			try {
 				InetAddress ia = socket.getInetAddress();
+				File filename = new File("src/sounds/receive.mp3");// playing mp3 file
+                MP3 mp3 = new MP3(filename);
+                mp3.play();
 				if (splitOnce == true) {
 					String str = in.readLine();
 					String[] splitted = str.split(":");
@@ -67,6 +72,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					printText();
 				}
 			} catch (IOException e) {
+				File filename = new File("src/sounds/alert.mp3");// playing mp3 file
+                MP3 mp3 = new MP3(filename);
+                mp3.play();
 				JOptionPane.showMessageDialog(null,
 						"Error connecting to the Client", "Error",
 						JOptionPane.ERROR_MESSAGE);
@@ -120,6 +128,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 			t = new Thread(this);
 			t.start();
 		} catch (IOException ioe) {
+			File filename = new File("src/sounds/alert.mp3");// playing mp3 file
+            MP3 mp3 = new MP3(filename);
+            mp3.play();
 			JOptionPane.showMessageDialog(null,
 					"Error occured while creating server socket", "Error",
 					JOptionPane.ERROR_MESSAGE);
@@ -129,6 +140,10 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		// the action of sending message to the client
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				File filename = new File("src/sounds/send.mp3");// playing mp3 file
+                MP3 mp3 = new MP3(filename);
+                mp3.play();
+                
 				printString = name + ": " + sendSpace.getText() + "\n";
 				printText();
 				try {
@@ -137,6 +152,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					out.flush();
 					sendSpace.setText("");
 				} catch (IOException ie) {
+					File filename2 = new File("src/sounds/alert.mp3");// playing mp3 file
+		            MP3 mp32 = new MP3(filename2);
+		            mp32.play();
 					JOptionPane.showMessageDialog(null,
 							"Error occured while creating server socket",
 							"Error", JOptionPane.ERROR_MESSAGE);
@@ -146,6 +164,9 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		});
 		replay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				File filename = new File("src/sounds/sound11.mp3");// playing mp3 file
+                MP3 mp3 = new MP3(filename);
+                mp3.play();
 				DrawingOvalsServer.replayGame();
 			}
 		});
