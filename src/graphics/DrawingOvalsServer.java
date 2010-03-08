@@ -344,6 +344,10 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 
 	// Cleanup for disconnect
 	public static void cleanUp() {
+		/**
+		 * Cleaning up by closing all the open sockets and streams before
+		 * terminating the game to make sure it won't cause any problems
+		 * */
 		try {
 			if (serverSocket != null) {
 				serverSocket.close();
@@ -371,8 +375,31 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 				socket = null;
 			}
 		} catch (IOException e) { socket = null; }
+		
+		try {
+			if (ChatPanelServer.socket != null) {
+				ChatPanelServer.socket.close();
+				ChatPanelServer.socket = null;
+			}
+		} catch (IOException e) { ChatPanelServer.socket = null; }
+		
+		try {
+			if (ChatPanelServer.in != null) {
+				ChatPanelServer.in.close();
+				ChatPanelServer.in = null;
+			}
+		} catch (IOException e) { ChatPanelServer.in = null; }
+		
+		try {
+			if (ChatPanelServer.out != null) {
+				ChatPanelServer.out.close();
+				ChatPanelServer.out = null;
+			}
+		} catch (IOException e) { ChatPanelServer.out = null; }
 	}
+
 	private static int cleanUpOnClose() {
+		// Cleaning up if the user exits using the default close operation
 		cleanUp();
 		return 3;
 	}
