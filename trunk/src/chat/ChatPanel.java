@@ -47,9 +47,9 @@ public class ChatPanel extends JPanel implements Runnable {
 	public static Thread t;
 
 	// define socket and buffer for connection
-	Socket socket;
-	BufferedReader in = null;
-	BufferedWriter out = null;
+	public static Socket socket;
+	public static BufferedReader in = null;
+	public static BufferedWriter out = null;
 	boolean splitOnce;
 
 	// thread method to allow receiving messages from chat
