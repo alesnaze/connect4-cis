@@ -5,14 +5,15 @@ import java.util.ArrayList;
 import java.io.IOException;
 import network.ScanOwnNetwork;
 
+/**
+ * Scanning a Specific port on an IP or range of IPs, The default IP is the
+ * local IP resulted from the ScanOwnNetwork.java class. Given the IP
+ * address ofthe machine and the SubnetMask, this class concludes the whole
+ * IPs within the network so its possible to scan the whole network using
+ * this application.
+ * @see ScanOwnNetwork
+ * */
 class PortScanner {
-	/**
-	 * Scanning a Specific port on an IP or range of IPs, The default IP is the
-	 * local IP resulted from the ScanOwnNetwork.java class. Given the IP
-	 * address ofthe machine and the SubnetMask, this class concludes the whole
-	 * IPs within the network so its possible to scan the whole network using
-	 * this application.
-	 * */
 	public static ArrayList<String> resultIPsList = new ArrayList<String>();
 	boolean endIP = true;
 	private static int port;
@@ -40,8 +41,7 @@ class PortScanner {
 					int diff = 8 - binaryIP.length();
 					for (int j = 1; j <= diff; j++) {
 						// This loop is for adding the 0 bits to the binary
-						// number
-						// so it'll be 8-bit number
+						// number so it'll be 8-bit number
 						binaryIP = "0" + binaryIP;
 						binaryBroadcastIP = binaryIP;
 					}
@@ -105,8 +105,7 @@ class PortScanner {
 								.isReachable(10);
 						if (status == true) {
 							try {
-								InetAddress ia = InetAddress
-										.getByAddress(ipAddress);
+								InetAddress ia = InetAddress.getByAddress(ipAddress);
 								scan(ia);
 							} catch (UnknownHostException ex) {
 								System.err.println(ipAddress
@@ -119,11 +118,11 @@ class PortScanner {
 		}
 	}
 
+	/**
+	 * This method is used for Scanning the given IPs for a specified port
+	 * and then tells whether the port is opened or not.
+	 * **/
 	public static void scan(InetAddress remote) {
-		/**
-		 * This method is used for Scanning the given IPs for a specified port
-		 * and then tells whether the port is opened or not.
-		 * **/
 		String hostname = remote.getHostAddress();
 		if (port == 0) {
 			System.out.println("Scanning the known IPs in the whole network..");
@@ -147,19 +146,19 @@ class PortScanner {
 		}
 	}
 
+	/**
+	 * used for Scanning by name
+	 * */
 	public static void scan(String remote) throws UnknownHostException {
-		/**
-		 * used for Scanning by name
-		 * */
 		InetAddress ia = InetAddress.getByName(remote);
 		scan(ia);
 	}
 
+	/**
+	 * This method is used to manage the octets of an IP address when adding
+	 * "1" to the current IP
+	 * */
 	public static int[] IPsWithinRange(int[] networkAddress, int i) {
-		/**
-		 * This method is used to manage the octets of an IP address when adding
-		 * "1" to the current IP
-		 * */
 		if (networkAddress[i] == 255) {
 			networkAddress[i] = 1;
 			networkAddress = IPsWithinRange(networkAddress, i - 1);

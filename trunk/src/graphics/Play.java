@@ -11,23 +11,23 @@ import network.NewJFrame;
 import mp3.MP3;
 
 @SuppressWarnings({ "serial", "unused" })
+/**
+ * This class is responsible for drawing the main frame image and waiting
+ * for a mouse response to perform a specific operation
+ * */
 public class Play extends JFrame {
-	/**
-	 * This class is responsible for drawing the main frame image and waiting
-	 * for a mouse response to perform a specific operation
-	 * */
 	private int x, y;
 
 	public static void main(String[] args) {
 		Play frame = new Play();
 	}
 
+	/**
+	 * This constructor sets the visibility of the frame, size, name, and
+	 * whatever settings needed for this frame its also responsible for
+	 * Listening to the Mouse and watching its clicks
+	 * */
 	public Play() {
-		/**
-		 * This constructor sets the visibility of the frame, size, name, and
-		 * whatever settings needed for this frame its also responsible for
-		 * Listening to the Mouse and watching its clicks
-		 * */
 		setVisible(true);
 		setSize(550, 400);
 		setTitle("Main Menu");

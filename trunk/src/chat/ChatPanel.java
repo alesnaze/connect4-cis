@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package chat;
 
@@ -24,11 +20,14 @@ import java.net.Socket;
 import javax.swing.*;
 import mp3.MP3;
 
-@SuppressWarnings({ "serial", "unused" })
+@SuppressWarnings( { "serial", "unused" })
+/**
+ * Defines Chat components in the Client side and draws them to the main
+ * frame. then it connects to the server and starts I/O streaming, then
+ * begin sending and receiving text and update the chat receive space each
+ * time.
+ * */
 public class ChatPanel extends JPanel implements Runnable {
-	/**
-	 * This class draws the game's Background image and sets its dimension
-	 * */
 
 	final Image image = new ImageIcon("src/images/chat.png").getImage();
 
@@ -52,7 +51,7 @@ public class ChatPanel extends JPanel implements Runnable {
 	public static BufferedWriter out = null;
 	boolean splitOnce;
 
-	// thread method to allow receiving messages from chat
+	/** thread method to allow receiving messages from chat */
 	public void run() {
 		while (true) {
 			try {
@@ -80,9 +79,13 @@ public class ChatPanel extends JPanel implements Runnable {
 		}
 	}
 
+	/**
+	 * A constructor which draws the actual chat components, try to connect to
+	 * the server, then run the thread to handle the chatting
+	 * @see #run()
+	 * */
 	public ChatPanel() {
 		repaint();
-
 		// add chat components
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 8));
 		sp_recieveSpace
@@ -175,19 +178,22 @@ public class ChatPanel extends JPanel implements Runnable {
 		});
 	}
 
-	// Drawing the image
+	/** Drawing the background image */
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.drawImage(image, 0, 0, this);
 	}
 
-	// Setting the JPanel's Size
+	/** Setting the JPanel's Size */
 	public Dimension getPreferredSize() {
 		return new Dimension(800, 150);
 	}
 
+	/**
+	 * printing the written text in the local receive space and scrolling down
+	 * after writing the text
+	 * */
 	public void printText() {
-		// printing the written text in the local chat box
 		recieveSpace.append(printString);
 		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15));
 		recieveSpace.getCaret().setDot(recieveSpace.getText().length());
