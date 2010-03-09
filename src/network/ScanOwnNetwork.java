@@ -4,15 +4,18 @@ import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
+import javax.swing.JOptionPane;
+
 @SuppressWarnings("unused")
+/**
+ * Scans the local machine for its IP addresses and returns them (ignoring
+ * the loopback IP) then passes the IP(s) to the PortScannner.java class to
+ * start the scanning process for the specified port. An example of how to
+ * scan from command line: java ScanOwnNetwork 22 24 where "22" is port
+ * number and "24" is subnet mask
+ * @see PortScanner
+ * */
 public class ScanOwnNetwork {
-	/**
-	 * Scans the local machine for its IP addresses and returns them (ignoring
-	 * the loopback IP) then passes the IP(s) to the PortScannner.java class to
-	 * start the scanning process for the specified port. An example of how to
-	 * scan from command line: java ScanOwnNetwork 22 24 where "22" is port
-	 * number and "24" is subnet mask
-	 * */
 	public static PortScanner portScanner;
 	private String[] scannedIPs;
 	public static int port = 0;
@@ -24,8 +27,8 @@ public class ScanOwnNetwork {
 			try {
 				port = Integer.parseInt(args[0]);
 			} catch (Exception e) {
-				System.out
-						.println("Port must be an integer and between 1-65535");
+				JOptionPane.showMessageDialog(null, "Port must be an integer and between 1-65535");
+				System.exit(1);
 			}
 
 			if (args.length > 1) {
@@ -33,8 +36,8 @@ public class ScanOwnNetwork {
 				try {
 					subnet = Integer.parseInt(args[1]);
 				} catch (Exception e) {
-					System.out
-							.println("Subnet must be an integer and between 8-32");
+					JOptionPane.showMessageDialog(null, "Subnet must be an integer and between 8-32");
+					System.exit(1);
 				}
 			}
 		}
@@ -82,11 +85,11 @@ public class ScanOwnNetwork {
 		return scannedIPs;
 	}
 
+	/**
+	 * Converting any IPv4 string address to an integer one by converting
+	 * each string octet separately into integer ones
+	 * */
 	public int[] toIntegerIP(String[] stringIP) {
-		/**
-		 * Converting any IPv4 string address to an integer one by converting
-		 * each string octet separately into integer ones
-		 * */
 		int[] integerIP = new int[4];
 		for (int i = 0; i < stringIP.length; i++) {
 			int convertedOctet = Integer.parseInt(stringIP[i]);

@@ -8,21 +8,18 @@ import javax.swing.*;
 
 import mp3.MP3;
 
-@SuppressWarnings("serial")
+@SuppressWarnings({ "serial", "unused" })
+/**
+ * This class is responsible for creating the "About Us" Window
+ * */
 public class AboutUs extends JFrame{
-        /**
-         * This class is responsible for creating the "About Us" Window which appears when clicking "About Us" button in the main frame
-         * so it contains a constructor which is responsible for the frame settings and the Mouse Listener
-         * and other two methods, one for drawing the image on the frame, and the other for setting its Dimentions
-         * */
-
         private int x,y;
 
+        /**
+         * This constructor sets the visibility of the frame, size, name, and whatever settings needed for this frame
+         * its also responsible for Listening to the Mouse and watching its clicks, so it can return to the main frame when the user clicks "main"
+         * */
         public AboutUs(){
-                /**
-                 * This constructor sets the visibility of the frame, size, name, and whatever settings needed for this frame
-                 * its also responsible for Listening to the Mouse and watching its clicks, so it can return to the main frame when the user clicks "main"
-                 * */
                 setVisible(true);
                 setSize(550,400);
                 setTitle("About Us");
@@ -43,7 +40,6 @@ public class AboutUs extends JFrame{
                                         if (y>=310 && y<=340) {
                                                 // When clicking the "main" button, it'll redirect you to the "main" form
                                                 setVisible(false);
-                                                @SuppressWarnings("unused")
 												Play splashScreen = new Play();
                                         }
                                         else if (y>=343 && y<=370 ) {

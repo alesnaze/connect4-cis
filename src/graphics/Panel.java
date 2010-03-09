@@ -5,10 +5,10 @@ import java.awt.event.*;
 import javax.swing.*;
 
 @SuppressWarnings({ "serial", "unused" })
+/**
+ * This class draws the main frame's Background image and sets its dimension
+ * */
 class Panel extends JPanel {
-	/**
-	 * This class draws the game's Background image and sets its dimension
-	 * */
 	final Image image = new ImageIcon("src/images/connect4.png").getImage();
 	boolean background;
 	
@@ -21,7 +21,7 @@ class Panel extends JPanel {
 		}
 	}
 
-	// Drawing the image
+	/** Drawing the image */
 	protected void paintComponent(Graphics g) {
 		if (background == true) {
 			super.paintComponent(g);
@@ -29,7 +29,7 @@ class Panel extends JPanel {
 		}
 	}
 
-	// Setting the JPanel's Size
+	/** Setting the JPanel's Size */
 	public Dimension getPreferredSize() {
 		return new Dimension(424, 363);
 	}

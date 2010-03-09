@@ -11,16 +11,15 @@ import chat.ChatPanel;
 import chat.ChatPanelServer;
 import mp3.MP3;
 
-@SuppressWarnings({ "unused", "serial" })
+@SuppressWarnings({ "unused", "serial", "deprecation" })
+/**
+ * This class draws Ovals (Circles) on the main frame and checks if any
+ * of these Ovals are clicked, then it performs action according to
+ * the place of the circle
+ * */
 public class DrawingOvals extends JFrame implements Runnable {
-	/**
-	 * This class draws Ovals (Circles) on the main frame and checks whether any
-	 * of these Ovals are being clicked on then it performs action according to
-	 * the place of the circle
-	 * */
-
-	static // define socket, buffer and InetAddress for connection
-	Socket socket;
+	// defining socket, buffer and InetAddress for connection
+	static Socket socket;
 	static DataInputStream in = null;
 	static DataOutputStream out = null;
 	public static InetAddress ia;
@@ -44,8 +43,11 @@ public class DrawingOvals extends JFrame implements Runnable {
 
 	static int PLAYER; // determine who's turn is to be played
 	
-	// thread method for receiving the new state from other player
-	@SuppressWarnings("deprecation")
+	/**
+	 * Thread method to start reading input from server and split it to know if
+	 * there's any specified signal (i.e: win signal, replay signal) and then
+	 * perform an action according to that signal
+	 * */
 	public void run() {
 		while (true) {
 			try {
@@ -90,10 +92,13 @@ public class DrawingOvals extends JFrame implements Runnable {
 			}
 		}
 	}
-
 	Panel panel;
 
-	@SuppressWarnings({ "deprecation" })
+	/**
+	 * Constructor to draw the main frame and all the components needed, then it
+	 * creates server sockets and threads and wait for the client to connect
+	 * @see #run()
+	 * */
 	public DrawingOvals() {
 		// Creating the Frame and setting it's properties [visibility, size,
 		// resizability and closing]
@@ -206,7 +211,11 @@ public class DrawingOvals extends JFrame implements Runnable {
 		});
 	}
 
-	// Painting the Circles and filling them
+	/**
+	 * Drawing the circles in the grid, filling them with the right color if
+	 * they're clicked, then check if anyone won the game
+	 * @see ICheck
+	 * */
 	public void paint(Graphics g) {
 		super.paint(g);
 		// Drawing the Circles
@@ -286,18 +295,19 @@ public class DrawingOvals extends JFrame implements Runnable {
 		}
 	}
 
+	/** getting the last played label and check if somebody won */
 	public void getLbl(int yIndex2, int xIndex2) {
-		// getting the last played label and check if somebody won
 		jlbl[yIndex2 - 1][xIndex2 - 1].setIcon(green);
 		String winn = ICheck.checkwin(jlbl, red, green);
 	}
 
+	/** Setting the Frame's Size */
 	public Dimension getPreferredSize() {
 		return new Dimension(800, 600);
 	}
 
+	/** replaying game by re-setting the board to its initial state */
 	public static void replayGame() {
-		// replaying game by resetting the board to its initial state
 		if (PLAYER == 3) {
 			full = 0;
 			for (int i = 0; i < 6; i++) {
@@ -351,12 +361,12 @@ public class DrawingOvals extends JFrame implements Runnable {
 			}
 		}
 	}
-	// Cleanup for disconnect
+
+	/**
+	 * Cleaning up by closing all the open sockets and streams before
+	 * terminating the game to make sure it won't cause any problems
+	 * */
 	public static void cleanUp() {
-		/**
-		 * Cleaning up by closing all the open sockets and streams before
-		 * terminating the game to make sure it won't cause any problems
-		 * */
 		try {
 			if (in != null) {
 				in.close();
@@ -399,8 +409,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 			}
 		} catch (IOException e) { ChatPanel.out = null; }
 	}
+
+	/** Cleaning up if the user exits using the default close operation */
 	private static int cleanUpOnClose() {
-		// Cleaning up if the user exits using the default close operation
 		cleanUp();
 		return 3;
 	}
