@@ -53,9 +53,28 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	public static BufferedReader in = null;
 	public static BufferedWriter out = null;
 	boolean splitOnce;
+	boolean socketAccepted = false;
 
 	/** thread method to allow receiving messages from chat */
 	public void run() {
+		if (socketAccepted == false) {
+			try {
+				socket = serverSocket.accept();
+				in = new BufferedReader(new InputStreamReader(socket
+						.getInputStream(), "UTF8"));
+				out = new BufferedWriter(new OutputStreamWriter(socket
+						.getOutputStream(), "UTF8"));
+				splitOnce = true;
+				out.write(name + ": ");
+				out.newLine();
+				out.flush();
+
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}	
+			socketAccepted = true;
+		}
+		
 		while (true) {
 			try {
 				InetAddress ia = socket.getInetAddress();
@@ -119,16 +138,6 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		// opening the socket and accepting connection from client
 		try {
 			serverSocket = new ServerSocket(8000);
-			socket = serverSocket.accept();
-
-			in = new BufferedReader(new InputStreamReader(socket
-					.getInputStream(), "UTF8"));
-			out = new BufferedWriter(new OutputStreamWriter(socket
-					.getOutputStream(), "UTF8"));
-			splitOnce = true;
-			out.write(name + ": ");
-			out.newLine();
-			out.flush();
 			t = new Thread(this);
 			t.start();
 		} catch (IOException ioe) {
