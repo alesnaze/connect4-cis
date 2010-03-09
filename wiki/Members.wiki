@@ -15,6 +15,7 @@ one of team members
 === Basma ===
   * A very talented Flash designer who designed the project's flash page.
 === Dina Ramadan ===
+  * Java programmer
 === Hend Gabr===
   * Java programmer
   * C# programmer 
