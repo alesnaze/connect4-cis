@@ -25,7 +25,8 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	static DataOutputStream out = null;
 	// Labels to show information about both players
 	private JLabel clientLabel, serverLabel, clientPlayer, serverPlayer,
-			clientScore, serverScore, redLabel, greenLabel;
+			clientScore, serverScore, redLabel, greenLabel, waitingImageLabel,
+			waitingLabel;
 	public static String name;
 	 // intial value of score for server and client
 	int serverWin = 0;
@@ -40,6 +41,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	ImageIcon red = new ImageIcon("src/images/red.png");
 
 	static int PLAYER = 2; // determine who's turn is to be played
+	boolean socketAccepted = false;
 
 	/**
 	 * Thread method to start reading input from client and split it to know if
@@ -48,6 +50,29 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	 * @see ICheck
 	 * */
 	public void run() {
+		if (socketAccepted == false) {
+			try {
+				socket = serverSocket.accept();
+				waitingImageLabel.hide();
+				waitingLabel.hide();
+				repaint();
+				in = new DataInputStream(socket.getInputStream());
+				out = new DataOutputStream(socket.getOutputStream());
+				clientPlayer.setText(ChatPanelServer.name2);
+				this.enable();
+				serverPlayer.show();
+				clientPlayer.show();
+				clientScore.show();
+				serverScore.show();
+				greenLabel.show();
+				redLabel.show();
+				clientLabel.show();
+				serverLabel.show();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			socketAccepted = true;
+		}
 		while (true) {
 			try {
 				InetAddress ia = socket.getInetAddress();
@@ -135,6 +160,16 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		final Image icon = new ImageIcon("src/images/Connect4Logo.png")
 				.getImage();
 		this.setIconImage(icon);
+		
+		waitingImageLabel = new JLabel();
+		waitingImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(
+				"/images/waitingtoconnect.png")));
+		waitingImageLabel.setMaximumSize(new java.awt.Dimension(600, 250));
+		waitingImageLabel.setMinimumSize(new java.awt.Dimension(600, 250));
+		
+		waitingLabel = new JLabel("Waiting for a client to connect..");
+        waitingLabel.setForeground(new java.awt.Color(254, 254, 254));
+        waitingLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
 
 		// Adding the JPanel to the JFrame and edit their properties
 		panel = new Panel(false);
@@ -142,22 +177,35 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		Panel p = new Panel(true);
 		p.setLayout(new FlowLayout(FlowLayout.LEFT, 185, 28));
 		p.add(panel);
+		
+		this.add(waitingLabel);
+		waitingLabel.setBounds(150, 87, 600, 250);
+		this.add(waitingImageLabel);
+		waitingImageLabel.setBounds(100, 87, 600, 250);
 		this.add(serverPlayer);
 		serverPlayer.setBounds(45, 140, 135, 35);
+		serverPlayer.hide();
 		this.add(clientPlayer);
 		clientPlayer.setBounds(665, 140, 135, 35);
+		clientPlayer.hide();
 		this.add(clientScore);
 		clientScore.setBounds(665, 185, 135, 35);
+		clientScore.hide();
 		this.add(serverScore);
 		serverScore.setBounds(45, 185, 135, 35);
+		serverScore.hide();
 		this.add(greenLabel);
 		greenLabel.setBounds(45, 250, 60, 60);
+		greenLabel.hide();
 		this.add(redLabel);
 		redLabel.setBounds(665, 250, 60, 60);
+		redLabel.hide();
 		this.add(clientLabel);
 		clientLabel.setBounds(645, 100, 135, 35);
+		clientLabel.hide();
 		this.add(serverLabel);
 		serverLabel.setBounds(25, 100, 135, 35);
+		serverLabel.hide();
 		this.add(p);
 		this.pack();
 
@@ -167,15 +215,11 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		// make send button the default button when pressing enter
 		cps.getRootPane().setDefaultButton(cps.send);
 		ChatPanelServer.sendSpace.requestFocus();
-		clientPlayer.setText(ChatPanelServer.name2);		
 		// opening the socket and accepting connection from client
 		try {
 			// Creating a socket and waiting for connection
 			serverSocket = new ServerSocket(8451);
-			socket = serverSocket.accept();
-			in = new DataInputStream(socket.getInputStream());
-			out = new DataOutputStream(socket.getOutputStream());
-
+			this.disable();
 			Thread tP = new Thread(this);
 			tP.start();
 		} catch (IOException ioe) {

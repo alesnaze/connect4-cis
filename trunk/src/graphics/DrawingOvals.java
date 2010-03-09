@@ -49,6 +49,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 * perform an action according to that signal
 	 * */
 	public void run() {
+		serverPlayer.setText(ChatPanel.name2);
 		while (true) {
 			try {
 				InetAddress ia = socket.getInetAddress();
@@ -170,7 +171,6 @@ public class DrawingOvals extends JFrame implements Runnable {
 		// make send button the default button when pressing enter
 		cp.getRootPane().setDefaultButton(cp.send);
 		ChatPanel.sendSpace.requestFocus();
-		serverPlayer.setText(ChatPanel.name2);
 		try {
 			// connect to the server socket
 			socket = new Socket("localhost", 8451);
