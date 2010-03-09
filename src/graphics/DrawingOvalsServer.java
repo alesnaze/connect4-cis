@@ -21,6 +21,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	// define socket, buffer and InetAddress for connection
 	static ServerSocket serverSocket = null;
 	static Socket socket;
+	static ServerSocket scanSocket = null;
 	static DataInputStream in = null;
 	static DataOutputStream out = null;
 	// Labels to show information about both players
@@ -52,13 +53,14 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	public void run() {
 		if (socketAccepted == false) {
 			try {
+				scanSocket = new ServerSocket(8453);
+				scanSocket.accept();
 				socket = serverSocket.accept();
 				waitingImageLabel.hide();
 				waitingLabel.hide();
 				repaint();
 				in = new DataInputStream(socket.getInputStream());
 				out = new DataOutputStream(socket.getOutputStream());
-				clientPlayer.setText(ChatPanelServer.name2);
 				this.enable();
 				serverPlayer.show();
 				clientPlayer.show();
@@ -74,6 +76,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 			socketAccepted = true;
 		}
 		while (true) {
+			clientPlayer.setText(ChatPanelServer.name2);
 			try {
 				InetAddress ia = socket.getInetAddress();
 				String s = in.readUTF();

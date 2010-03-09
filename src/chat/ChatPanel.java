@@ -18,6 +18,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 import javax.swing.*;
+
+import network.NewJFrame;
 import mp3.MP3;
 
 @SuppressWarnings( { "serial", "unused" })
@@ -44,6 +46,7 @@ public class ChatPanel extends JPanel implements Runnable {
 	String name = DrawingOvals.name;
 	public static String name2;
 	public static Thread t;
+	InetAddress serverIP;
 
 	// define socket and buffer for connection
 	public static Socket socket;
@@ -85,6 +88,7 @@ public class ChatPanel extends JPanel implements Runnable {
 	 * @see #run()
 	 * */
 	public ChatPanel() {
+		serverIP = NewJFrame.ia;
 		repaint();
 		// add chat components
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 8));
@@ -114,7 +118,7 @@ public class ChatPanel extends JPanel implements Runnable {
 
 		// connection to the server socket
 		try {
-			socket = new Socket("localhost", 8000);
+			socket = new Socket(serverIP, 8452);
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream(), "UTF8"));
 			out = new BufferedWriter(new OutputStreamWriter(socket

@@ -7,6 +7,8 @@ import java.net.*;
 
 import javax.swing.*;
 
+import network.NewJFrame;
+
 import chat.ChatPanel;
 import chat.ChatPanelServer;
 import mp3.MP3;
@@ -30,6 +32,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 // intial value of score for server and client
 	int serverWin = 0;
 	int clientWin = 0;
+	InetAddress serverIP;
 
 	int x, y; // to record mouse position
 
@@ -49,8 +52,8 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 * perform an action according to that signal
 	 * */
 	public void run() {
-		serverPlayer.setText(ChatPanel.name2);
 		while (true) {
+			serverPlayer.setText(ChatPanel.name2);
 			try {
 				InetAddress ia = socket.getInetAddress();
 				String s = in.readUTF();
@@ -101,6 +104,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 * @see #run()
 	 * */
 	public DrawingOvals() {
+		serverIP = NewJFrame.ia;
 		// Creating the Frame and setting it's properties [visibility, size,
 		// resizability and closing]
 		this.setVisible(true);
@@ -173,7 +177,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		ChatPanel.sendSpace.requestFocus();
 		try {
 			// connect to the server socket
-			socket = new Socket("localhost", 8451);
+			socket = new Socket(serverIP, 8451);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 

@@ -1,23 +1,35 @@
 package network;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import graphics.DrawingOvals;
 
 import javax.swing.JOptionPane;
 
-@SuppressWarnings({ "unused", "serial" })
+@SuppressWarnings( { "unused", "serial" })
 public class NewJFrame extends javax.swing.JFrame {
-	public String[] jListIPs = {""};
+	public String[] jListIPs = { "" };
 	public static byte[] byteArray = new byte[4];
+	public static InetAddress ia;
 	int[] integerArray = new int[4];
 	String myStr;
 	String[] temp = new String[4];
+
+//	public static void main(String[] args) {
+//		try {
+//			new NewJFrame();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public NewJFrame() throws Exception {
 		java.awt.EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					setVisible(true);
-//					jListIPs = jListIPsContent();
+					 jListIPs = jListIPsContent();
 					initComponents();
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null,
@@ -28,11 +40,11 @@ public class NewJFrame extends javax.swing.JFrame {
 		});
 	}
 
-//	public String[] jListIPsContent() throws Exception {
-//		GetOwnIP IPGetter = new GetOwnIP();
-//		String[] tempz = IPGetter.getScannedIPs();
-//		return tempz;
-//	}
+	 public String[] jListIPsContent() throws Exception {
+	 ScanOwnNetwork IPGetter = new ScanOwnNetwork();
+	 String[] tempz = IPGetter.getScannedIPs();
+	 return tempz;
+	 }
 
 	private void initComponents() {
 
@@ -78,7 +90,7 @@ public class NewJFrame extends javax.swing.JFrame {
 		getContentPane().add(manualIP);
 
 		jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/images/connect4.png")));
+				"/images/portscanner bg.png")));
 		jLabel3.setText("jLabel1");
 		jLabel3.setMaximumSize(new java.awt.Dimension(550, 429));
 		jLabel3.setMinimumSize(new java.awt.Dimension(300, 400));
@@ -95,21 +107,25 @@ public class NewJFrame extends javax.swing.JFrame {
 		if (manualIP.getText() != "") {
 			myStr = manualIP.getText();
 			temp = myStr.split("[.]");
-			for (int i = 0 ; i < temp.length ; i++) {
+			for (int i = 0; i < temp.length; i++) {
 				integerArray[i] = Integer.parseInt(temp[i]);
-				byteArray[i] = (byte) integerArray[i];
+				byteArray[i] = (byte)integerArray[i];
+			}
+			try {
+				ia = InetAddress.getByAddress(byteArray);
+			} catch (UnknownHostException e) {
+				JOptionPane.showMessageDialog(null, "Please make sure you typed the IP correctly");
 			}
 			setVisible(false);
 			new DrawingOvals();
-//			System.out.println(manualIP.getText());
-		}
-		else
-			System.out.println("Please Select or Manually write an IP");
+			// System.out.println(manualIP.getText());
+		} else
+			JOptionPane.showMessageDialog(null, "Please Select or Manually write an IP");
 	}
-	
+
 	public byte[] toByteIP(String[] stringIP) {
 		byte[] bA = new byte[4];
-		for (int i = 0 ; i < stringIP.length ; i++) {
+		for (int i = 0; i < stringIP.length; i++) {
 			byte Obj = Byte.parseByte(stringIP[i]);
 			bA[i] = Obj;
 		}
@@ -124,5 +140,4 @@ public class NewJFrame extends javax.swing.JFrame {
 	private javax.swing.JScrollPane jScrollPane1;
 	private javax.swing.JScrollPane jScrollPane2;
 	private javax.swing.JTextField manualIP;
-
 }

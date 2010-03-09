@@ -136,12 +136,11 @@ class PortScanner {
 			}
 		} else {
 			try {
+				//port is open
 				Socket s = new Socket(remote, port);
 				s.close();
 				resultIPsList.add(hostname);
-				System.out.println("Port: " + port	+ " is open on: " + hostname);
 			} catch (IOException ex) {
-			ex.printStackTrace();
 			}
 		}
 	}
