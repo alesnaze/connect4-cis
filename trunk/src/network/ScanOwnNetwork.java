@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 public class ScanOwnNetwork {
 	public static PortScanner portScanner;
 	private String[] scannedIPs;
-	public static int port = 0;
-	public static int subnet = 0;
+	public static int port = 8453;
+	public static int subnet = 24;
 
 	public static void main(String[] args) {
 		if (args.length > 0) {

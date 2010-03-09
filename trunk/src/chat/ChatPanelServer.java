@@ -137,7 +137,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 
 		// opening the socket and accepting connection from client
 		try {
-			serverSocket = new ServerSocket(8000);
+			serverSocket = new ServerSocket(8452);
 			t = new Thread(this);
 			t.start();
 		} catch (IOException ioe) {
