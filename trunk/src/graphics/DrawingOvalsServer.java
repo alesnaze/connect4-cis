@@ -11,7 +11,7 @@ import chat.ChatPanel;
 import chat.ChatPanelServer;
 import mp3.MP3;
 
-@SuppressWarnings({ "serial", "unused", "deprecation" })
+@SuppressWarnings({ "serial", "unused", "deprecation", "static-access" })
 /**
  * This class draws Ovals (Circles) on the main frame and checks if any
  * of these Ovals are clicked, then it performs action according to
@@ -42,7 +42,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	ImageIcon red = new ImageIcon("src/images/red.png");
 
 	static int PLAYER = 2; // determine who's turn is to be played
-	boolean socketAccepted = false;
+	boolean lestiner, socketAccepted = false;
 
 	/**
 	 * Thread method to start reading input from client and split it to know if
@@ -53,27 +53,18 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	public void run() {
 		if (socketAccepted == false) {
 			try {
-				scanSocket = new ServerSocket(8453);
-				scanSocket.accept();
+//				scanSocket = new ServerSocket(8453);
+//				scanSocket.accept();
 				socket = serverSocket.accept();
-				waitingImageLabel.hide();
-				waitingLabel.hide();
+				controlComponents(true);
 				repaint();
 				in = new DataInputStream(socket.getInputStream());
 				out = new DataOutputStream(socket.getOutputStream());
-				this.enable();
-				serverPlayer.show();
-				clientPlayer.show();
-				clientScore.show();
-				serverScore.show();
-				greenLabel.show();
-				redLabel.show();
-				clientLabel.show();
-				serverLabel.show();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			socketAccepted = true;
+			ChatPanelServer.sendSpace.requestFocus();
 		}
 		while (true) {
 			clientPlayer.setText(ChatPanelServer.name2);
@@ -187,28 +178,20 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		waitingImageLabel.setBounds(100, 87, 600, 250);
 		this.add(serverPlayer);
 		serverPlayer.setBounds(45, 140, 135, 35);
-		serverPlayer.hide();
 		this.add(clientPlayer);
 		clientPlayer.setBounds(665, 140, 135, 35);
-		clientPlayer.hide();
 		this.add(clientScore);
 		clientScore.setBounds(665, 185, 135, 35);
-		clientScore.hide();
 		this.add(serverScore);
 		serverScore.setBounds(45, 185, 135, 35);
-		serverScore.hide();
 		this.add(greenLabel);
 		greenLabel.setBounds(45, 250, 60, 60);
-		greenLabel.hide();
 		this.add(redLabel);
 		redLabel.setBounds(665, 250, 60, 60);
-		redLabel.hide();
 		this.add(clientLabel);
 		clientLabel.setBounds(645, 100, 135, 35);
-		clientLabel.hide();
 		this.add(serverLabel);
 		serverLabel.setBounds(25, 100, 135, 35);
-		serverLabel.hide();
 		this.add(p);
 		this.pack();
 
@@ -217,12 +200,10 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		this.add(cps, BorderLayout.SOUTH);
 		// make send button the default button when pressing enter
 		cps.getRootPane().setDefaultButton(cps.send);
-		ChatPanelServer.sendSpace.requestFocus();
 		// opening the socket and accepting connection from client
 		try {
 			// Creating a socket and waiting for connection
 			serverSocket = new ServerSocket(8451);
-			this.disable();
 			Thread tP = new Thread(this);
 			tP.start();
 		} catch (IOException ioe) {
@@ -247,13 +228,16 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		// getting the mouse position when clicked
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseClick) {
-				x = mouseClick.getX();
-				y = mouseClick.getY();
-				if (PLAYER == 2) {
-					repaint();
+				if (lestiner == true) {
+					x = mouseClick.getX();
+					y = mouseClick.getY();
+					if (PLAYER == 2) {
+						repaint();
+					}
 				}
 			}
 		});
+		controlComponents(false);
 	}
 
 	/**
@@ -347,6 +331,29 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		return new Dimension(800, 600);
 	}
 
+	/**
+	 * A method for controlling the frame components, enable, disable, hide and
+	 * show them. this is important to make sure the server player won't do
+	 * anything wrong by using components to send for example when the socket is
+	 * not yet created.
+	 * */
+	public void controlComponents(boolean enabled) {
+		lestiner = enabled;
+		ChatPanelServer.sendSpace.setEnabled(enabled);
+		ChatPanelServer.send.setEnabled(enabled);
+		ChatPanelServer.replay.setEnabled(enabled);
+		waitingImageLabel.setVisible(!enabled);
+		waitingLabel.setVisible(!enabled);
+		serverPlayer.setVisible(enabled);
+		clientPlayer.setVisible(enabled);
+		clientScore.setVisible(enabled);
+		serverScore.setVisible(enabled);
+		greenLabel.setVisible(enabled);
+		redLabel.setVisible(enabled);
+		clientLabel.setVisible(enabled);
+		serverLabel.setVisible(enabled);
+	}
+	
 	/** replaying game by re-setting the board to its initial state */
 	public static void replayGame() {
 		if (PLAYER == 3) {

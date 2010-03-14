@@ -20,6 +20,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import javax.swing.*;
+
 import mp3.MP3;
 
 @SuppressWarnings( { "unused", "serial" })
@@ -35,11 +36,11 @@ public class ChatPanelServer extends JPanel implements Runnable {
 
 	// define chat components
 	public static JTextField sendSpace = new JTextField(53);
-	JTextArea recieveSpace = new JTextArea(5, 62);
+	JTextArea recieveSpace = new JTextArea(4, 63);
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
-	JLabel sendlbl = new JLabel(">");
-	public JButton send = new JButton("send");
-	public JButton replay = new JButton("replay");
+	JLabel sendlbl, chatSeparator;
+	public static JButton send = new JButton("send");
+	public static JButton replay = new JButton("replay");
 	public JButton exit = new JButton("Exit");
 	int lineSpace = 30;
 	String printString;
@@ -112,7 +113,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		// add chat components
 		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 8));
 		sp_recieveSpace
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		recieveSpace.setEditable(false);
 		recieveSpace.setLineWrap(true);
 		recieveSpace.setBackground(new Color(108, 114, 146));
@@ -125,10 +126,15 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		sendSpace.setFont(new Font(null, 1, 12));
 		sendSpace
 				.setToolTipText("Write here then press \"send\" to chat with the other player");
+		sendlbl  = new JLabel(">");
 		sendlbl.setFont(new Font(null, 1, 12));
 		sendlbl.setForeground(new Color(0, 85, 0));
+		chatSeparator = new JLabel();
+		chatSeparator.setIcon(new javax.swing.ImageIcon(getClass().getResource(
+				"/images/chatSeparator.png")));
 
 		this.add(sp_recieveSpace);
+		this.add(chatSeparator);
 		this.add(sendlbl);
 		this.add(sendSpace);
 		this.add(send);
