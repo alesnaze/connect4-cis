@@ -177,7 +177,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		ChatPanel.sendSpace.requestFocus();
 		try {
 			// connect to the server socket
-			socket = new Socket(serverIP, 8451);
+			socket = new Socket("localhost", 8451);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 
