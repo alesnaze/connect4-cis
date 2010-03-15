@@ -17,8 +17,9 @@ one of team members
 === Dina Ramadan ===
   * Java programmer
 === Hend Gabr===
-  * Java programmer
+  * Java SE , jav EE programmer
   * C# programmer 
+  * 2D Graphics Designer
 === Islam Morsy ===
   * JavaSE , JavaEE programmer
   * RedHat Linux System Administrator
