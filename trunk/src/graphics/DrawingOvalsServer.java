@@ -53,9 +53,8 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	public void run() {
 		if (socketAccepted == false) {
 			try {
-//				scanSocket = new ServerSocket(8453);
-//				scanSocket.accept();
 				socket = serverSocket.accept();
+				scanSocket.close();
 				controlComponents(true);
 				repaint();
 				in = new DataInputStream(socket.getInputStream());
@@ -204,6 +203,16 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		try {
 			// Creating a socket and waiting for connection
 			serverSocket = new ServerSocket(8451);
+			scanSocket = new ServerSocket(8453);
+			
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					try {
+						scanSocket.accept();
+					} catch (IOException e) {
+					}
+				}
+			});
 			Thread tP = new Thread(this);
 			tP.start();
 		} catch (IOException ioe) {

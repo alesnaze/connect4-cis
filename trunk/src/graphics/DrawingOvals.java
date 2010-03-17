@@ -7,7 +7,7 @@ import java.net.*;
 
 import javax.swing.*;
 
-import network.NewJFrame;
+import network.ConnectForm;
 
 import chat.ChatPanel;
 import chat.ChatPanelServer;
@@ -104,7 +104,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 * @see #run()
 	 * */
 	public DrawingOvals() {
-		serverIP = NewJFrame.ia;
+		serverIP = ConnectForm.ia;
 		// Creating the Frame and setting it's properties [visibility, size,
 		// resizability and closing]
 		this.setVisible(true);
@@ -177,7 +177,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		ChatPanel.sendSpace.requestFocus();
 		try {
 			// connect to the server socket
-			socket = new Socket("localhost", 8451);
+			socket = new Socket(serverIP, 8451);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 

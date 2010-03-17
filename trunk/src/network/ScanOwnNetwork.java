@@ -21,33 +21,33 @@ public class ScanOwnNetwork {
 	public static int port = 8453;
 	public static int subnet = 24;
 
-	public static void main(String[] args) {
-		if (args.length > 0) {
-			// Reading Port from user as the first argument
-			try {
-				port = Integer.parseInt(args[0]);
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, "Port must be an integer and between 1-65535");
-				System.exit(1);
-			}
-
-			if (args.length > 1) {
-				// Reading Subnet Mask from user as the second argument
-				try {
-					subnet = Integer.parseInt(args[1]);
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(null, "Subnet must be an integer and between 8-32");
-					System.exit(1);
-				}
-			}
-		}
-		try {
-			// Calling GetOwnIP Constructor to start searching for available IPs
-			new ScanOwnNetwork();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		if (args.length > 0) {
+//			// Reading Port from user as the first argument
+//			try {
+//				port = Integer.parseInt(args[0]);
+//			} catch (Exception e) {
+//				JOptionPane.showMessageDialog(null, "Port must be an integer and between 1-65535");
+//				System.exit(1);
+//			}
+//
+//			if (args.length > 1) {
+//				// Reading Subnet Mask from user as the second argument
+//				try {
+//					subnet = Integer.parseInt(args[1]);
+//				} catch (Exception e) {
+//					JOptionPane.showMessageDialog(null, "Subnet must be an integer and between 8-32");
+//					System.exit(1);
+//				}
+//			}
+//		}
+//		try {
+//			// Calling GetOwnIP Constructor to start searching for available IPs
+//			new ScanOwnNetwork();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@SuppressWarnings("static-access")
 	public ScanOwnNetwork() throws Exception {
@@ -64,8 +64,8 @@ public class ScanOwnNetwork {
 				break;
 			for (Enumeration<InetAddress> addresses = iface.getInetAddresses(); addresses
 					.hasMoreElements();) {
+				InetAddress address = addresses.nextElement();
 				if (iface.isLoopback() == false) {
-					InetAddress address = addresses.nextElement();
 					stringIP = address.toString();
 				}
 				if (addresses.hasMoreElements() == false)
