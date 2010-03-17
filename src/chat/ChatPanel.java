@@ -19,7 +19,7 @@ import java.net.Socket;
 
 import javax.swing.*;
 
-import network.NewJFrame;
+import network.ConnectForm;
 import mp3.MP3;
 
 @SuppressWarnings( { "serial", "unused" })
@@ -88,10 +88,10 @@ public class ChatPanel extends JPanel implements Runnable {
 	 * @see #run()
 	 * */
 	public ChatPanel() {
-		serverIP = NewJFrame.ia;
+		serverIP = ConnectForm.ia;
 		repaint();
 		// add chat components
-		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 8));
+		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
 		sp_recieveSpace
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		recieveSpace.setEditable(false);
@@ -123,7 +123,7 @@ public class ChatPanel extends JPanel implements Runnable {
 
 		// connection to the server socket
 		try {
-			socket = new Socket("localhost", 8452);
+			socket = new Socket(serverIP, 8452);
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream(), "UTF8"));
 			out = new BufferedWriter(new OutputStreamWriter(socket

@@ -111,7 +111,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		repaint();
 
 		// add chat components
-		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 8));
+		this.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
 		sp_recieveSpace
 				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		recieveSpace.setEditable(false);

@@ -7,7 +7,7 @@ import java.io.File;
 
 import javax.swing.*;
 
-import network.NewJFrame;
+import network.ConnectForm;
 import mp3.MP3;
 
 @SuppressWarnings({ "serial", "unused" })
@@ -56,12 +56,12 @@ public class Play extends JFrame {
 						// When clicking the "Start" button, it'll redirect you
 						// to the "main game" frame
 						setVisible(false);
-						new DrawingOvals();
-//						try {
-//							new NewJFrame();
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
+//						new DrawingOvals();
+						try {
+							new ConnectForm();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					} else if (y >= 288 && y <= 348) {
 						// When clicking the "About us" button, it'll redirect
 						// you to the "About Us" frame
