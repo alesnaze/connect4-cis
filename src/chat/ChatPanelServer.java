@@ -219,7 +219,8 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	 * */
 	public void printText() {
 		recieveSpace.append(printString);
-		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15));
+		int printNewLine = (printString.length()/80) + 1;
+		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15*printNewLine));
 		recieveSpace.getCaret().setDot(recieveSpace.getText().length());
 		sp_recieveSpace.scrollRectToVisible(recieveSpace.getVisibleRect());
 	}
