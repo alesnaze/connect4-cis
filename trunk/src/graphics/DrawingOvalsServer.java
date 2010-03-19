@@ -11,7 +11,7 @@ import chat.ChatPanel;
 import chat.ChatPanelServer;
 import mp3.MP3;
 
-@SuppressWarnings({ "serial", "unused", "deprecation", "static-access" })
+@SuppressWarnings( { "serial", "unused", "deprecation", "static-access" })
 /**
  * This class draws Ovals (Circles) on the main frame and checks if any
  * of these Ovals are clicked, then it performs action according to
@@ -25,29 +25,37 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	static DataInputStream in = null;
 	static DataOutputStream out = null;
 	// Labels to show information about both players
-	private JLabel clientLabel, serverLabel, clientPlayer, serverPlayer,
-			clientScore, serverScore, redLabel, greenLabel, waitingImageLabel,
-			waitingLabel;
-	public static String name;
-	 // intial value of score for server and client
+	private static JLabel clientLabel, serverLabel;
+	public static JLabel clientPlayer;
+	private static JLabel serverPlayer, clientScore, serverScore, redLabel, greenLabel;
+	private static JLabel waitingImageLabel;
+	private static JLabel waitingLabel;
+	private static JTextField nameField;
+	private static JButton nameFieldButton;
+	public static String name = "";
+	// intial value of score for server and client
 	int serverWin = 0;
 	int clientWin = 0;
 
 	int x, y; // to record mouse position
 	static int full = 0; // number of painted circles
-	static JLabel[][] jlbl = new JLabel[6][7]; // Labels to store painted images of circles by both players
+	static JLabel[][] jlbl = new JLabel[6][7]; // Labels to store painted images
+												// of circles by both players
 
 	static ImageIcon img = new ImageIcon("src/images/empty.png");
 	ImageIcon green = new ImageIcon("src/images/green.png");
 	ImageIcon red = new ImageIcon("src/images/red.png");
 
 	static int PLAYER = 2; // determine who's turn is to be played
-	boolean lestiner, socketAccepted = false;
+	static boolean lestiner;
+	boolean socketAccepted = false;
+	public static boolean nameFieldStatus = false;
 
 	/**
 	 * Thread method to start reading input from client and split it to know if
 	 * there's any specified signal (i.e: win signal, replay signal) and then
 	 * perform an action according to that signal
+	 * 
 	 * @see ICheck
 	 * */
 	public void run() {
@@ -55,18 +63,17 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 			try {
 				socket = serverSocket.accept();
 				scanSocket.close();
-				controlComponents(true);
-				repaint();
 				in = new DataInputStream(socket.getInputStream());
 				out = new DataOutputStream(socket.getOutputStream());
+				socketAccepted = true;
+				ChatPanelServer.sendSpace.requestFocus();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			socketAccepted = true;
-			ChatPanelServer.sendSpace.requestFocus();
 		}
 		while (true) {
-			clientPlayer.setText(ChatPanelServer.name2);
+			name = nameField.getText();
+			serverPlayer.setText(name);
 			try {
 				InetAddress ia = socket.getInetAddress();
 				String s = in.readUTF();
@@ -88,20 +95,20 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 						clientWin += 1;
 						clientScore.setText("Score:  " + clientWin);
 						File filename = new File("src/sounds/boo-03.mp3");// playing mp3 file
-                        MP3 mp3 = new MP3(filename);
-                        mp3.play();
+						MP3 mp3 = new MP3(filename);
+						mp3.play();
 					} else {
 						getLbl(yIndex2, xIndex2);
 						File filename = new File("src/sounds/sound6.mp3");// playing mp3 file
-                        MP3 mp3 = new MP3(filename);
-                        mp3.play();
+						MP3 mp3 = new MP3(filename);
+						mp3.play();
 					}
 				}
 			} catch (IOException e) {
 				ChatPanelServer.t.stop();
 				File filename = new File("src/sounds/alert.mp3");// playing mp3 file
-                MP3 mp3 = new MP3(filename);
-                mp3.play();
+				MP3 mp3 = new MP3(filename);
+				mp3.play();
 				cleanUp();
 				System.exit(1);
 			}
@@ -111,7 +118,9 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 
 	/**
 	 * Constructor to draw the main frame and all the components needed, then it
-	 * connects to server sockets, uses threads after establishing the connection
+	 * connects to server sockets, uses threads after establishing the
+	 * connection
+	 * 
 	 * @see #run()
 	 * */
 	public DrawingOvalsServer() {
@@ -120,9 +129,9 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		this.setVisible(true);
 		this.setSize(800, 600);
 		this.setTitle("Connect 4 Server");
-		while (name == null || name.length() == 0) {
-			name = JOptionPane.showInputDialog(null, "enter your name");
-		}
+		// while (name == null || name.length() == 0) {
+		// name = JOptionPane.showInputDialog(null, "enter your name");
+		// }
 		// labels for information about the players
 		serverPlayer = new JLabel(name);
 		serverPlayer.setForeground(new java.awt.Color(254, 254, 254));
@@ -132,12 +141,12 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		clientScore.setForeground(new java.awt.Color(254, 254, 254));
 		serverScore = new JLabel("Score:  " + serverWin);
 		serverScore.setForeground(new java.awt.Color(254, 254, 254));
-        clientLabel = new JLabel("Player 2");
-        clientLabel.setForeground(new java.awt.Color(254, 254, 254));
-        clientLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
-        serverLabel = new JLabel("Player 1");
-        serverLabel.setForeground(new java.awt.Color(254, 254, 254));
-        serverLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+		clientLabel = new JLabel("Player 2");
+		clientLabel.setForeground(new java.awt.Color(254, 254, 254));
+		clientLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+		serverLabel = new JLabel("Player 1");
+		serverLabel.setForeground(new java.awt.Color(254, 254, 254));
+		serverLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
 		greenLabel = new JLabel();
 		greenLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(
 				"/images/green.png")));
@@ -148,21 +157,26 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 				"/images/red.png")));
 		redLabel.setMaximumSize(new java.awt.Dimension(60, 60));
 		redLabel.setMinimumSize(new java.awt.Dimension(60, 60));
+		nameField = new JTextField();
+		nameField.setBackground(new java.awt.Color(0, 0, 0));
+		nameField.setForeground(new java.awt.Color(254, 254, 254));
+		nameFieldButton = new JButton("Submit");
+
+		waitingImageLabel = new JLabel();
+		waitingImageLabel.setIcon(new javax.swing.ImageIcon(getClass()
+				.getResource("/images/waitingtoconnect.png")));
+		waitingImageLabel.setMaximumSize(new java.awt.Dimension(600, 250));
+		waitingImageLabel.setMinimumSize(new java.awt.Dimension(600, 250));
+
+		waitingLabel = new JLabel("Waiting for a client to connect..");
+		waitingLabel.setForeground(new java.awt.Color(254, 254, 254));
+		waitingLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+		
 		this.setResizable(false);
 		this.setDefaultCloseOperation(cleanUpOnClose());
 		final Image icon = new ImageIcon("src/images/Connect4Logo.png")
 				.getImage();
 		this.setIconImage(icon);
-		
-		waitingImageLabel = new JLabel();
-		waitingImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource(
-				"/images/waitingtoconnect.png")));
-		waitingImageLabel.setMaximumSize(new java.awt.Dimension(600, 250));
-		waitingImageLabel.setMinimumSize(new java.awt.Dimension(600, 250));
-		
-		waitingLabel = new JLabel("Waiting for a client to connect..");
-        waitingLabel.setForeground(new java.awt.Color(254, 254, 254));
-        waitingLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
 
 		// Adding the JPanel to the JFrame and edit their properties
 		panel = new Panel(false);
@@ -170,7 +184,12 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		Panel p = new Panel(true);
 		p.setLayout(new FlowLayout(FlowLayout.LEFT, 185, 28));
 		p.add(panel);
-		
+
+		this.add(nameField);
+		nameField.setBounds(330, 250, 120, 25);
+		nameField.requestFocus();
+		this.add(nameFieldButton);
+		nameFieldButton.setBounds(330, 280, 120, 25);
 		this.add(waitingLabel);
 		waitingLabel.setBounds(150, 87, 600, 250);
 		this.add(waitingImageLabel);
@@ -204,7 +223,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 			// Creating a socket and waiting for connection
 			serverSocket = new ServerSocket(8451);
 			scanSocket = new ServerSocket(8453);
-			
+
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
 					try {
@@ -218,8 +237,8 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		} catch (IOException ioe) {
 			ChatPanelServer.t.stop();
 			File filename = new File("src/sounds/alert.mp3");// playing mp3 file
-            MP3 mp3 = new MP3(filename);
-            mp3.play();
+			MP3 mp3 = new MP3(filename);
+			mp3.play();
 			cleanUp();
 			System.exit(1);
 		}
@@ -246,6 +265,33 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 				}
 			}
 		});
+		nameFieldButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (name.length() == 0) {
+					name = nameField.getText();
+					serverPlayer.setText(name);
+					nameField.setVisible(false);
+					nameFieldButton.setVisible(false);
+					ChatPanelServer.name = name;
+					nameFieldStatus = true;
+				}
+				if (socketAccepted == true) {
+					ChatPanelServer.writeName(name);
+					nameFieldStatus = false;
+				}
+			}
+		});
+		nameField.addKeyListener(new KeyListener() {
+			
+			public void keyTyped(KeyEvent e) {
+				if (nameField.getText().length() >14){
+					nameField.setText(nameField.getText().substring(0, 14));
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {}
+		});
 		controlComponents(false);
 	}
 
@@ -270,15 +316,20 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 						try {
 							if (isFull == true) {
 								// try the following if the board is full
-								File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
-                                MP3 mp3 = new MP3(filename);
-                                mp3.play();
-								String[] options = {"Replay", "Exit"};
-								int option = JOptionPane.showOptionDialog(null, "The board is full.", "Replay?", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+								File filename = new File("src/sounds/alert.mp3");// playing
+																					// mp3
+																					// file
+								MP3 mp3 = new MP3(filename);
+								mp3.play();
+								String[] options = { "Replay", "Exit" };
+								int option = JOptionPane.showOptionDialog(null,
+										"The board is full.", "Replay?",
+										JOptionPane.YES_NO_OPTION,
+										JOptionPane.INFORMATION_MESSAGE, null,
+										options, options[0]);
 								if (option == 0) {
 									replayGame();
-								}
-								else {
+								} else {
 									cleanUp();
 									System.exit(0);
 								}
@@ -296,19 +347,24 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 									if (win == "none") {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 1);
-										File filename = new File("src/sounds/sound6.mp3");// playing mp3 file
-                                        MP3 mp3 = new MP3(filename);
-                                        mp3.play();
-									}
-									else {
+										File filename = new File(
+												"src/sounds/sound6.mp3");// playing
+																			// mp3
+																			// file
+										MP3 mp3 = new MP3(filename);
+										mp3.play();
+									} else {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 0);
 										serverWin += 1;
 										serverScore.setText("Score:  "
 												+ serverWin);
-										File filename = new File("src/sounds/app-15.mp3");// playing mp3 file 
-                                        MP3 mp3 = new MP3(filename);
-                                        mp3.play();
+										File filename = new File(
+												"src/sounds/app-15.mp3");// playing
+																			// mp3
+																			// file
+										MP3 mp3 = new MP3(filename);
+										mp3.play();
 										JOptionPane.showMessageDialog(null,
 												"you win");
 									}
@@ -317,9 +373,11 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 								}
 							}
 						} catch (IOException ie) {
-							File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
-                            MP3 mp3 = new MP3(filename);
-                            mp3.play();
+							File filename = new File("src/sounds/alert.mp3");// playing
+																				// mp3
+																				// file
+							MP3 mp3 = new MP3(filename);
+							mp3.play();
 							cleanUp();
 							System.exit(1);
 						}
@@ -346,13 +404,15 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	 * anything wrong by using components to send for example when the socket is
 	 * not yet created.
 	 * */
-	public void controlComponents(boolean enabled) {
+	public static void controlComponents(boolean enabled) {
 		lestiner = enabled;
 		ChatPanelServer.sendSpace.setEnabled(enabled);
 		ChatPanelServer.send.setEnabled(enabled);
 		ChatPanelServer.replay.setEnabled(enabled);
 		waitingImageLabel.setVisible(!enabled);
 		waitingLabel.setVisible(!enabled);
+		nameField.setVisible(!enabled);
+		nameFieldButton.setVisible(!enabled);
 		serverPlayer.setVisible(enabled);
 		clientPlayer.setVisible(enabled);
 		clientScore.setVisible(enabled);
@@ -362,7 +422,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		clientLabel.setVisible(enabled);
 		serverLabel.setVisible(enabled);
 	}
-	
+
 	/** replaying game by re-setting the board to its initial state */
 	public static void replayGame() {
 		if (PLAYER == 3) {
@@ -373,12 +433,12 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 				}
 			}
 		}
-		
+
 		// informing the Client with the Replay status
 		else {
-			File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
-            MP3 mp3 = new MP3(filename);
-            mp3.play();
+			File filename = new File("src/sounds/alert.mp3");// playing mp3 file
+			MP3 mp3 = new MP3(filename);
+			mp3.play();
 			String[] options = { "Yes", "No", "Exit" };
 			int option = JOptionPane.showOptionDialog(null,
 					"Are you sure you want to replay?", "Replay?",
@@ -398,11 +458,11 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 					cleanUp();
 					System.exit(1);
 				}
-			}
-			else if (option == 2) {
-				File filename2 = new File("src/sounds/alert.mp3");// playing mp3 file 
-                MP3 mp32 = new MP3(filename2);
-                mp32.play();
+			} else if (option == 2) {
+				File filename2 = new File("src/sounds/alert.mp3");// playing mp3
+																	// file
+				MP3 mp32 = new MP3(filename2);
+				mp32.play();
 				String[] eOptions = { "Yes", "No" };
 				int eOption = JOptionPane.showOptionDialog(null,
 						"Are you sure you want to exit?", "Exit?",
@@ -427,49 +487,63 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 				serverSocket.close();
 				serverSocket = null;
 			}
-		} catch (IOException e) { serverSocket = null; }
-		
+		} catch (IOException e) {
+			serverSocket = null;
+		}
+
 		try {
 			if (in != null) {
 				in.close();
 				in = null;
 			}
-		} catch (IOException e) { in = null; }
-		
+		} catch (IOException e) {
+			in = null;
+		}
+
 		try {
 			if (out != null) {
 				out.close();
 				out = null;
 			}
-		} catch (IOException e) { out = null; }
-		
+		} catch (IOException e) {
+			out = null;
+		}
+
 		try {
 			if (socket != null) {
 				socket.close();
 				socket = null;
 			}
-		} catch (IOException e) { socket = null; }
-		
+		} catch (IOException e) {
+			socket = null;
+		}
+
 		try {
 			if (ChatPanelServer.socket != null) {
 				ChatPanelServer.socket.close();
 				ChatPanelServer.socket = null;
 			}
-		} catch (IOException e) { ChatPanelServer.socket = null; }
-		
+		} catch (IOException e) {
+			ChatPanelServer.socket = null;
+		}
+
 		try {
 			if (ChatPanelServer.in != null) {
 				ChatPanelServer.in.close();
 				ChatPanelServer.in = null;
 			}
-		} catch (IOException e) { ChatPanelServer.in = null; }
-		
+		} catch (IOException e) {
+			ChatPanelServer.in = null;
+		}
+
 		try {
 			if (ChatPanelServer.out != null) {
 				ChatPanelServer.out.close();
 				ChatPanelServer.out = null;
 			}
-		} catch (IOException e) { ChatPanelServer.out = null; }
+		} catch (IOException e) {
+			ChatPanelServer.out = null;
+		}
 	}
 
 	/** Cleaning up if the user exits using the default close operation */

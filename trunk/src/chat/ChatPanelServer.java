@@ -44,7 +44,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	public JButton exit = new JButton("Exit");
 	int lineSpace = 30;
 	String printString;
-	String name = DrawingOvalsServer.name;
+	public static String name;
 	public static String name2;
 	public static Thread t;
 
@@ -53,7 +53,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	public static Socket socket;
 	public static BufferedReader in = null;
 	public static BufferedWriter out = null;
-	boolean splitOnce;
+	public static boolean splitOnce, isSplitted, sentName;
 	boolean socketAccepted = false;
 
 	/** thread method to allow receiving messages from chat */
@@ -61,18 +61,17 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		if (socketAccepted == false) {
 			try {
 				socket = serverSocket.accept();
+				name = DrawingOvalsServer.name;
 				in = new BufferedReader(new InputStreamReader(socket
 						.getInputStream(), "UTF8"));
 				out = new BufferedWriter(new OutputStreamWriter(socket
 						.getOutputStream(), "UTF8"));
 				splitOnce = true;
-				out.write(name + ": ");
-				out.newLine();
-				out.flush();
-
+				isSplitted = false;
+				sentName = false;
 			} catch (IOException e1) {
 				e1.printStackTrace();
-			}	
+			}
 			socketAccepted = true;
 		}
 		
@@ -88,6 +87,11 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					String[] splitted = str.split(":");
 					name2 = splitted[0];
 					splitOnce = false;
+					isSplitted = true;
+					if (DrawingOvalsServer.nameFieldStatus == true) {
+						writeName(DrawingOvalsServer.name);
+					}
+					sentAndReceiveName();
 				} else {
 					printString = in.readLine() + "\n";
 					printText();
@@ -223,5 +227,24 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15*printNewLine));
 		recieveSpace.getCaret().setDot(recieveSpace.getText().length());
 		sp_recieveSpace.scrollRectToVisible(recieveSpace.getVisibleRect());
+	}
+	
+	public static void writeName(String serverName) {
+		try {
+			out.write(serverName + ": ");
+			out.newLine();
+			out.flush();
+			sentName = true;
+			sentAndReceiveName();
+		} catch (IOException e) {
+
+		}
+	}
+	public static void sentAndReceiveName() {
+		if (isSplitted == true && sentName == true) {
+			DrawingOvalsServer.controlComponents(true);
+			DrawingOvalsServer.clientPlayer.setText(name2);
+			sendSpace.requestFocus();
+		}
 	}
 }
