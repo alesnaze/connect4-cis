@@ -26,8 +26,12 @@ public class DrawingOvals extends JFrame implements Runnable {
 	static DataOutputStream out = null;
 	public static InetAddress ia;
 	// Labels to show information about both players
-	private JLabel clientLabel, serverLabel, clientPlayer, serverPlayer,
-			clientScore, serverScore, redLabel, greenLabel;
+	private static JLabel clientLabel, serverLabel;
+	public static JLabel clientPlayer;
+	private static JLabel clientScore, serverScore, redLabel, greenLabel, waitingImageLabel, waitingLabel;
+	public static JLabel serverPlayer;
+	private static JTextField nameField;
+	private static JButton nameFieldButton;
 	public static String name;
 	 // intial value of score for server and client
 	int serverWin = 0;
@@ -45,7 +49,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	ImageIcon red = new ImageIcon("src/images/red.png");
 
 	static int PLAYER; // determine who's turn is to be played
-	
+	static boolean lestiner;
 	/**
 	 * Thread method to start reading input from server and split it to know if
 	 * there's any specified signal (i.e: win signal, replay signal) and then
@@ -53,7 +57,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 * */
 	public void run() {
 		while (true) {
-			serverPlayer.setText(ChatPanel.name2);
+			name = nameField.getText();
 			try {
 				InetAddress ia = socket.getInetAddress();
 				String s = in.readUTF();
@@ -101,6 +105,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	/**
 	 * Constructor to draw the main frame and all the components needed, then it
 	 * creates server sockets and threads and wait for the client to connect
+	 * 
 	 * @see #run()
 	 * */
 	public DrawingOvals() {
@@ -110,9 +115,9 @@ public class DrawingOvals extends JFrame implements Runnable {
 		this.setVisible(true);
 		this.setSize(800, 600);
 		this.setTitle("Connect 4");
-		while (name == null || name.length() == 0) {
-			name = JOptionPane.showInputDialog(null, "enter your name");
-		}
+//		while (name == null || name.length() == 0) {
+//			name = JOptionPane.showInputDialog(null, "enter your name");
+//		}
 		// labels for information about the players
 		clientLabel = new JLabel("Player 2");
 		clientLabel.setForeground(new java.awt.Color(254, 254, 254));
@@ -138,6 +143,21 @@ public class DrawingOvals extends JFrame implements Runnable {
 				"/images/red.png")));
 		redLabel.setMaximumSize(new java.awt.Dimension(60, 60));
 		redLabel.setMinimumSize(new java.awt.Dimension(60, 60));
+		nameField = new JTextField();
+		nameField.setBackground(new java.awt.Color(0, 0, 0));
+		nameField.setForeground(new java.awt.Color(254, 254, 254));
+		nameFieldButton = new JButton("Submit");
+		
+		waitingImageLabel = new JLabel();
+		waitingImageLabel.setIcon(new javax.swing.ImageIcon(getClass()
+				.getResource("/images/waitingtoconnect.png")));
+		waitingImageLabel.setMaximumSize(new java.awt.Dimension(600, 250));
+		waitingImageLabel.setMinimumSize(new java.awt.Dimension(600, 250));
+
+		waitingLabel = new JLabel("Waiting for a client to connect..");
+		waitingLabel.setForeground(new java.awt.Color(254, 254, 254));
+		waitingLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
+		
 		this.setResizable(false);
 		this.setDefaultCloseOperation(cleanUpOnClose());
 		final Image icon = new ImageIcon("src/images/Connect4Logo.png")
@@ -150,6 +170,16 @@ public class DrawingOvals extends JFrame implements Runnable {
 		Panel p = new Panel(true);
 		p.setLayout(new FlowLayout(FlowLayout.LEFT, 185, 28));
 		p.add(panel);
+		
+		this.add(nameField);
+		nameField.setBounds(330, 250, 120, 25);
+		nameField.requestFocus();
+		this.add(nameFieldButton);
+		nameFieldButton.setBounds(330, 280, 120, 25);
+		this.add(waitingLabel);
+		waitingLabel.setBounds(150, 87, 600, 250);
+		this.add(waitingImageLabel);
+		waitingImageLabel.setBounds(100, 87, 600, 250);
 		this.add(clientLabel);
 		clientLabel.setBounds(645, 100, 135, 35);
 		this.add(serverLabel);
@@ -206,13 +236,39 @@ public class DrawingOvals extends JFrame implements Runnable {
 		// getting the mouse position when clicked
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent mouseClick) {
-				x = mouseClick.getX();
-				y = mouseClick.getY();
-				if (PLAYER == 1) {
-					repaint();
+				if (lestiner == true) {
+					x = mouseClick.getX();
+					y = mouseClick.getY();
+					if (PLAYER == 1) {
+						repaint();
+					}
 				}
 			}
 		});
+		nameFieldButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (name.length() == 0) {
+					name = nameField.getText();
+					clientPlayer.setText(name);
+					nameField.setVisible(false);
+					nameFieldButton.setVisible(false);
+					ChatPanel.name = name;
+					ChatPanel.writeName(name);
+				}
+			}
+		});
+		nameField.addKeyListener(new KeyListener() {
+			
+			public void keyTyped(KeyEvent e) {
+				if (nameField.getText().length() >14){
+					nameField.setText(nameField.getText().substring(0, 14));
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {}
+		});
+		controlComponents(false);
 	}
 
 	/**
@@ -310,6 +366,31 @@ public class DrawingOvals extends JFrame implements Runnable {
 		return new Dimension(800, 600);
 	}
 
+	/**
+	 * A method for controlling the frame components, enable, disable, hide and
+	 * show them. this is important to make sure the server player won't do
+	 * anything wrong by using components to send for example when the socket is
+	 * not yet created.
+	 * */
+	public static void controlComponents(boolean enabled) {
+		lestiner = enabled;
+		ChatPanel.sendSpace.setEnabled(enabled);
+		ChatPanel.send.setEnabled(enabled);
+		ChatPanel.replay.setEnabled(enabled);
+		waitingImageLabel.setVisible(!enabled);
+		waitingLabel.setVisible(!enabled);
+		nameField.setVisible(!enabled);
+		nameFieldButton.setVisible(!enabled);
+		serverPlayer.setVisible(enabled);
+		clientPlayer.setVisible(enabled);
+		clientScore.setVisible(enabled);
+		serverScore.setVisible(enabled);
+		greenLabel.setVisible(enabled);
+		redLabel.setVisible(enabled);
+		clientLabel.setVisible(enabled);
+		serverLabel.setVisible(enabled);
+	}
+	
 	/** replaying game by re-setting the board to its initial state */
 	public static void replayGame() {
 		if (PLAYER == 3) {

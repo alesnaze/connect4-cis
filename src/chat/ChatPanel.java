@@ -38,12 +38,12 @@ public class ChatPanel extends JPanel implements Runnable {
 	JTextArea recieveSpace = new JTextArea(4, 63);
 	JScrollPane sp_recieveSpace = new JScrollPane(recieveSpace);
 	JLabel sendlbl, chatSeparator;
-	public JButton send = new JButton("send");
-	public JButton replay = new JButton("replay");
+	public static JButton send = new JButton("send");
+	public static JButton replay = new JButton("replay");
 	public JButton exit = new JButton("Exit");
 	int lineSpace = 30;
 	String printString;
-	String name = DrawingOvals.name;
+	public static String name;
 	public static String name2;
 	public static Thread t;
 	InetAddress serverIP;
@@ -52,7 +52,7 @@ public class ChatPanel extends JPanel implements Runnable {
 	public static Socket socket;
 	public static BufferedReader in = null;
 	public static BufferedWriter out = null;
-	boolean splitOnce;
+	public static boolean splitOnce, isSplitted, sentName;
 
 	/** thread method to allow receiving messages from chat */
 	public void run() {
@@ -67,7 +67,10 @@ public class ChatPanel extends JPanel implements Runnable {
 					String str = in.readLine();
 					String[] splitted = str.split(":");
 					name2 = splitted[0];
+					DrawingOvals.serverPlayer.setText(name2);
 					splitOnce = false;
+					isSplitted = true;
+					sentAndReceiveName();
 				} else {
 					printString = in.readLine() + "\n";
 					printText();
@@ -124,14 +127,15 @@ public class ChatPanel extends JPanel implements Runnable {
 		// connection to the server socket
 		try {
 			socket = new Socket(serverIP, 8452);
+			name = DrawingOvals.name;
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream(), "UTF8"));
 			out = new BufferedWriter(new OutputStreamWriter(socket
 					.getOutputStream(), "UTF8"));
 			splitOnce = true;
-			out.write(name + ": ");
-			out.newLine();
-			out.flush();
+			isSplitted = false;
+			sentName = false;
+			
 			t = new Thread(this);
 			t.start();
 
@@ -208,5 +212,24 @@ public class ChatPanel extends JPanel implements Runnable {
 		recieveSpace.setPreferredSize(new Dimension(400, lineSpace += 15*printNewLine));
 		recieveSpace.getCaret().setDot(recieveSpace.getText().length());
 		sp_recieveSpace.scrollRectToVisible(recieveSpace.getVisibleRect());
+	}
+	
+	public static void writeName(String serverName) {
+		try {
+			out.write(serverName + ": ");
+			out.newLine();
+			out.flush();
+			sentName = true;
+			sentAndReceiveName();
+		} catch (IOException e) {
+
+		}
+	}
+	public static void sentAndReceiveName() {
+		if (isSplitted == true && sentName == true) {
+			DrawingOvals.controlComponents(true);
+			DrawingOvals.clientPlayer.setText(name);
+			sendSpace.requestFocus();
+		}
 	}
 }
