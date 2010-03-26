@@ -44,8 +44,8 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	public JButton exit = new JButton("Exit");
 	int lineSpace = 30;
 	String printString;
-	public static String name;
-	public static String name2;
+	public static String serverName;
+	public static String clientName;
 	public static Thread t;
 
 	// define socket and buffer for connection
@@ -61,7 +61,7 @@ public class ChatPanelServer extends JPanel implements Runnable {
 		if (socketAccepted == false) {
 			try {
 				socket = serverSocket.accept();
-				name = DrawingOvalsServer.name;
+				serverName = DrawingOvalsServer.serverName;
 				in = new BufferedReader(new InputStreamReader(socket
 						.getInputStream(), "UTF8"));
 				out = new BufferedWriter(new OutputStreamWriter(socket
@@ -85,11 +85,11 @@ public class ChatPanelServer extends JPanel implements Runnable {
 					// getting an empty message from the server to discover the server's name
 					String str = in.readLine();
 					String[] splitted = str.split(":");
-					name2 = splitted[0];
+					clientName = splitted[0];
 					splitOnce = false;
 					isSplitted = true;
 					if (DrawingOvalsServer.nameFieldStatus == true) {
-						writeName(DrawingOvalsServer.name);
+						writeName(DrawingOvalsServer.serverName);
 					}
 					sentAndReceiveName();
 				} else {
@@ -165,10 +165,10 @@ public class ChatPanelServer extends JPanel implements Runnable {
                 MP3 mp3 = new MP3(filename);
                 mp3.play();
                 
-				printString = name + ": " + sendSpace.getText() + "\n";
+				printString = serverName + ": " + sendSpace.getText() + "\n";
 				printText();
 				try {
-					out.write(name + ": " + sendSpace.getText());
+					out.write(serverName + ": " + sendSpace.getText());
 					out.newLine();
 					out.flush();
 					sendSpace.setText("");
@@ -243,7 +243,8 @@ public class ChatPanelServer extends JPanel implements Runnable {
 	public static void sentAndReceiveName() {
 		if (isSplitted == true && sentName == true) {
 			DrawingOvalsServer.controlComponents(true);
-			DrawingOvalsServer.clientPlayer.setText(name2);
+			DrawingOvalsServer.serverPlayer.setText(serverName);
+			DrawingOvalsServer.clientPlayer.setText(clientName);
 			sendSpace.requestFocus();
 		}
 	}

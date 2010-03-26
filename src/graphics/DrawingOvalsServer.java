@@ -27,12 +27,13 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 	// Labels to show information about both players
 	private static JLabel clientLabel, serverLabel;
 	public static JLabel clientPlayer;
-	private static JLabel serverPlayer, clientScore, serverScore, redLabel, greenLabel;
+	public static JLabel serverPlayer;
+	private static JLabel clientScore, serverScore, redLabel, greenLabel;
 	private static JLabel waitingImageLabel;
 	private static JLabel waitingLabel;
 	private static JTextField nameField;
 	private static JButton nameFieldButton;
-	public static String name = "";
+	public static String serverName = "";
 	// intial value of score for server and client
 	int serverWin = 0;
 	int clientWin = 0;
@@ -72,8 +73,6 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 			}
 		}
 		while (true) {
-			name = nameField.getText();
-			serverPlayer.setText(name);
 			try {
 				InetAddress ia = socket.getInetAddress();
 				String s = in.readUTF();
@@ -129,11 +128,8 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		this.setVisible(true);
 		this.setSize(800, 600);
 		this.setTitle("Connect 4 Server");
-		// while (name == null || name.length() == 0) {
-		// name = JOptionPane.showInputDialog(null, "enter your name");
-		// }
 		// labels for information about the players
-		serverPlayer = new JLabel(name);
+		serverPlayer = new JLabel(serverName);
 		serverPlayer.setForeground(new java.awt.Color(254, 254, 254));
 		clientPlayer = new JLabel();
 		clientPlayer.setForeground(new java.awt.Color(254, 254, 254));
@@ -267,16 +263,16 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 		});
 		nameFieldButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (name.length() == 0) {
-					name = nameField.getText();
-					serverPlayer.setText(name);
+				if (serverName.length() == 0) {
+					serverName = nameField.getText();
+					serverPlayer.setText(serverName);
 					nameField.setVisible(false);
 					nameFieldButton.setVisible(false);
-					ChatPanelServer.name = name;
+					ChatPanelServer.serverName = serverName;
 					nameFieldStatus = true;
 				}
 				if (socketAccepted == true) {
-					ChatPanelServer.writeName(name);
+					ChatPanelServer.writeName(serverName);
 					nameFieldStatus = false;
 				}
 			}
@@ -316,9 +312,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 						try {
 							if (isFull == true) {
 								// try the following if the board is full
-								File filename = new File("src/sounds/alert.mp3");// playing
-																					// mp3
-																					// file
+								File filename = new File("src/sounds/alert.mp3");// playing  mp3 file
 								MP3 mp3 = new MP3(filename);
 								mp3.play();
 								String[] options = { "Replay", "Exit" };
@@ -348,9 +342,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 										out.writeUTF(yIndex + "x" + xIndex
 												+ "x" + 1);
 										File filename = new File(
-												"src/sounds/sound6.mp3");// playing
-																			// mp3
-																			// file
+												"src/sounds/sound6.mp3");// playing mp3 file
 										MP3 mp3 = new MP3(filename);
 										mp3.play();
 									} else {
@@ -360,9 +352,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 										serverScore.setText("Score:  "
 												+ serverWin);
 										File filename = new File(
-												"src/sounds/app-15.mp3");// playing
-																			// mp3
-																			// file
+												"src/sounds/app-15.mp3");// playing mp3 file
 										MP3 mp3 = new MP3(filename);
 										mp3.play();
 										JOptionPane.showMessageDialog(null,
@@ -373,9 +363,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 								}
 							}
 						} catch (IOException ie) {
-							File filename = new File("src/sounds/alert.mp3");// playing
-																				// mp3
-																				// file
+							File filename = new File("src/sounds/alert.mp3");// playing mp3 file
 							MP3 mp3 = new MP3(filename);
 							mp3.play();
 							cleanUp();
@@ -459,8 +447,7 @@ public class DrawingOvalsServer extends JFrame implements Runnable {
 					System.exit(1);
 				}
 			} else if (option == 2) {
-				File filename2 = new File("src/sounds/alert.mp3");// playing mp3
-																	// file
+				File filename2 = new File("src/sounds/alert.mp3");// playing mp3 file
 				MP3 mp32 = new MP3(filename2);
 				mp32.play();
 				String[] eOptions = { "Yes", "No" };
