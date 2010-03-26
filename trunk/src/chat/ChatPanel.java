@@ -43,8 +43,8 @@ public class ChatPanel extends JPanel implements Runnable {
 	public JButton exit = new JButton("Exit");
 	int lineSpace = 30;
 	String printString;
-	public static String name;
-	public static String name2;
+	public static String clientName;
+	public static String serverName;
 	public static Thread t;
 	InetAddress serverIP;
 
@@ -66,8 +66,8 @@ public class ChatPanel extends JPanel implements Runnable {
 					// getting an empty message from the server to discover the server's name
 					String str = in.readLine();
 					String[] splitted = str.split(":");
-					name2 = splitted[0];
-					DrawingOvals.serverPlayer.setText(name2);
+					serverName = splitted[0];
+					DrawingOvals.serverPlayer.setText(serverName);
 					splitOnce = false;
 					isSplitted = true;
 					sentAndReceiveName();
@@ -127,7 +127,7 @@ public class ChatPanel extends JPanel implements Runnable {
 		// connection to the server socket
 		try {
 			socket = new Socket(serverIP, 8452);
-			name = DrawingOvals.name;
+			clientName = DrawingOvals.clientName;
 			in = new BufferedReader(new InputStreamReader(socket
 					.getInputStream(), "UTF8"));
 			out = new BufferedWriter(new OutputStreamWriter(socket
@@ -150,10 +150,10 @@ public class ChatPanel extends JPanel implements Runnable {
 		// the action of sending message to the server
 		send.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				printString = name + ": " + sendSpace.getText() + "\n";
+				printString = clientName + ": " + sendSpace.getText() + "\n";
 				printText();
 				try {
-					out.write(name + ": " + sendSpace.getText());
+					out.write(clientName + ": " + sendSpace.getText());
 					out.newLine();
 					out.flush();
 					sendSpace.setText("");
@@ -228,7 +228,8 @@ public class ChatPanel extends JPanel implements Runnable {
 	public static void sentAndReceiveName() {
 		if (isSplitted == true && sentName == true) {
 			DrawingOvals.controlComponents(true);
-			DrawingOvals.clientPlayer.setText(name);
+			DrawingOvals.serverPlayer.setText(serverName);
+			DrawingOvals.clientPlayer.setText(clientName);
 			sendSpace.requestFocus();
 		}
 	}

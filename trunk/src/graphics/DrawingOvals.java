@@ -13,7 +13,7 @@ import chat.ChatPanel;
 import chat.ChatPanelServer;
 import mp3.MP3;
 
-@SuppressWarnings({ "unused", "serial", "deprecation" })
+@SuppressWarnings({ "unused", "serial", "deprecation", "static-access" })
 /**
  * This class draws Ovals (Circles) on the main frame and checks if any
  * of these Ovals are clicked, then it performs action according to
@@ -32,7 +32,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 	public static JLabel serverPlayer;
 	private static JTextField nameField;
 	private static JButton nameFieldButton;
-	public static String name;
+	public static String clientName="";
 	 // intial value of score for server and client
 	int serverWin = 0;
 	int clientWin = 0;
@@ -57,7 +57,6 @@ public class DrawingOvals extends JFrame implements Runnable {
 	 * */
 	public void run() {
 		while (true) {
-			name = nameField.getText();
 			try {
 				InetAddress ia = socket.getInetAddress();
 				String s = in.readUTF();
@@ -115,9 +114,6 @@ public class DrawingOvals extends JFrame implements Runnable {
 		this.setVisible(true);
 		this.setSize(800, 600);
 		this.setTitle("Connect 4");
-//		while (name == null || name.length() == 0) {
-//			name = JOptionPane.showInputDialog(null, "enter your name");
-//		}
 		// labels for information about the players
 		clientLabel = new JLabel("Player 2");
 		clientLabel.setForeground(new java.awt.Color(254, 254, 254));
@@ -125,7 +121,7 @@ public class DrawingOvals extends JFrame implements Runnable {
 		serverLabel = new JLabel("Player 1");
 		serverLabel.setForeground(new java.awt.Color(254, 254, 254));
 		serverLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
-		clientPlayer = new JLabel(name);
+		clientPlayer = new JLabel(clientName);
 		clientPlayer.setForeground(new java.awt.Color(254, 254, 254));
 		serverPlayer = new JLabel();
 		serverPlayer.setForeground(new java.awt.Color(254, 254, 254));
@@ -247,13 +243,13 @@ public class DrawingOvals extends JFrame implements Runnable {
 		});
 		nameFieldButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (name.length() == 0) {
-					name = nameField.getText();
-					clientPlayer.setText(name);
+				if (clientName.length() == 0) {
+					clientName = nameField.getText();
+					clientPlayer.setText(clientName);
 					nameField.setVisible(false);
 					nameFieldButton.setVisible(false);
-					ChatPanel.name = name;
-					ChatPanel.writeName(name);
+					ChatPanel.clientName = clientName;
+					ChatPanel.writeName(clientName);
 				}
 			}
 		});
