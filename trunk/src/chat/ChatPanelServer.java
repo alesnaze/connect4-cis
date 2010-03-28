@@ -1,9 +1,11 @@
 
 package chat;
 
-import graphics.DrawingOvals;
-import graphics.DrawingOvalsServer;
+import graphics.Client;
+import graphics.Drawing;
 import graphics.Play;
+import graphics.Server;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +43,7 @@ public class ChatPanelServer extends Chat{
 		if (socketAccepted == false) {
 			try {
 				socket = serverSocket.accept();
-				serverName = DrawingOvalsServer.serverName;
+				serverName = Server.serverName;
 				in = new BufferedReader(new InputStreamReader(socket
 						.getInputStream(), "UTF8"));
 				out = new BufferedWriter(new OutputStreamWriter(socket
@@ -75,7 +77,7 @@ public class ChatPanelServer extends Chat{
 			File filename = new File("src/sounds/alert.mp3");// playing mp3 file
             MP3 mp3 = new MP3(filename);
             mp3.play();
-			DrawingOvalsServer.cleanUp();
+			Drawing.cleanUp();
 			System.exit(1);
 		}
 

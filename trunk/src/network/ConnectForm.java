@@ -1,13 +1,15 @@
 package network;
 
+import graphics.Client;
+
 import java.awt.Image;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import graphics.DrawingOvals;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
 
 @SuppressWarnings({"unused", "serial"})
 public class ConnectForm extends javax.swing.JFrame {
@@ -113,7 +115,7 @@ public class ConnectForm extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Please make sure you typed the IP correctly");
             }
             setVisible(false);
-            new DrawingOvals();
+            new Client();
             // System.out.println(manualIP.getText());
         } else {
             JOptionPane.showMessageDialog(null, "Please Select or Manually write an IP");

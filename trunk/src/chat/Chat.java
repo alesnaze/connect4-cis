@@ -1,7 +1,9 @@
 package chat;
 
-import graphics.DrawingOvals;
-import graphics.DrawingOvalsServer;
+import graphics.Client;
+import graphics.Drawing;
+import graphics.ICheck;
+import graphics.Server;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -33,6 +35,10 @@ import javax.swing.JTextField;
 import mp3.MP3;
 
 @SuppressWarnings({ "unused", "serial" })
+/**
+ * initializing chat components and taking care of the incoming and outgoing chat
+ * messages, provides some buttons to be used in the game
+ * */
 public class Chat extends JPanel implements Runnable{
 	final Image image = new ImageIcon("src/images/chat.png").getImage();
 
@@ -58,6 +64,11 @@ public class Chat extends JPanel implements Runnable{
 	
 	public static int PLAYER;
 	
+	/**
+	 * Thread method to start reading input from the other player and split it
+	 * to know the other player's name, then starts receiving and sending chat messages.
+	 * */
+
 	public void run() {
 		if (PLAYER == 2) {
 			ChatPanelServer.initiateServer();
@@ -74,12 +85,12 @@ public class Chat extends JPanel implements Runnable{
 					String[] splitted = str.split(":");
 					if (PLAYER == 1) {
 						serverName = splitted[0];
-						DrawingOvals.serverPlayer.setText(serverName);
+						Drawing.serverPlayer.setText(serverName);
 					}
 					else if (PLAYER == 2) {
 						clientName = splitted[0];
-						if (DrawingOvalsServer.nameFieldStatus == true) {
-							writeName(DrawingOvalsServer.serverName);
+						if (Server.nameFieldStatus == true) {
+							writeName(Server.serverName);
 						}
 					}
 					splitOnce = false;
@@ -93,12 +104,15 @@ public class Chat extends JPanel implements Runnable{
 				File filename = new File("src/sounds/alert.mp3");// playing mp3 file
                 MP3 mp3 = new MP3(filename);
                 mp3.play();
-				DrawingOvals.cleanUp();
+				Drawing.cleanUp();
 				System.exit(1);
 			}
 		}
 	}
 	
+	/**
+	 * Method for creating and adding all the chat components.
+	 */
 	public void initComponents() {
 		repaint();
 
@@ -134,6 +148,10 @@ public class Chat extends JPanel implements Runnable{
 	}
 	
 	String playerName;
+	/**
+	 * Taking care of the buttons' actions, (what they do when they're clicked), and 
+	 * limiting the name input to specific string length.
+	 */
 	public void buttonsLestiners() {
 		// the action of sending message to the client
 		send.addActionListener(new ActionListener() {
@@ -158,12 +176,7 @@ public class Chat extends JPanel implements Runnable{
 					File filename2 = new File("src/sounds/alert.mp3");// playing mp3 file
 		            MP3 mp32 = new MP3(filename2);
 		            mp32.play();
-		            if (PLAYER == 1) {
-						DrawingOvals.cleanUp();
-		    		}
-		    		else if (PLAYER == 2) {
-						DrawingOvalsServer.cleanUp();
-		    		}
+		            Drawing.cleanUp();
 					System.exit(1);
 				}
 			}
@@ -173,12 +186,7 @@ public class Chat extends JPanel implements Runnable{
 				File filename = new File("src/sounds/sound11.mp3");// playing mp3 file
                 MP3 mp3 = new MP3(filename);
                 mp3.play();
-                if (PLAYER == 1) {
-    				DrawingOvals.replayGame();
-	    		}
-	    		else if (PLAYER == 2) {
-					DrawingOvalsServer.replayGame();
-	    		}
+                Drawing.replayGame();
 			}
 		});
 
@@ -191,12 +199,7 @@ public class Chat extends JPanel implements Runnable{
 						JOptionPane.INFORMATION_MESSAGE, null, options,
 						options[1]);
 				if (option == 0) {
-					if (PLAYER == 1) {
-						DrawingOvals.cleanUp();
-		    		}
-		    		else if (PLAYER == 2) {
-						DrawingOvalsServer.cleanUp();
-		    		}
+					Drawing.cleanUp();
 					System.exit(0);
 				}
 			}
@@ -227,6 +230,10 @@ public class Chat extends JPanel implements Runnable{
 		sp_recieveSpace.scrollRectToVisible(recieveSpace.getVisibleRect());
 	}
 	
+	/**
+	 * Sending the name to the other player so it can appear on the board.
+	 * @param serverName
+	 */
 	public static void writeName(String serverName) {
 		try {
 			out.write(serverName + ": ");
@@ -238,18 +245,15 @@ public class Chat extends JPanel implements Runnable{
 
 		}
 	}
+
+	/**
+	 * Making sure that both players sent and received the names so the actual game can start.
+	 */
 	public static void sentAndReceiveName() {
 		if (isSplitted == true && sentName == true) {
-			if (PLAYER == 2) {
-				DrawingOvalsServer.controlComponents(true);
-				DrawingOvalsServer.serverPlayer.setText(serverName);
-				DrawingOvalsServer.clientPlayer.setText(clientName);
-			}
-			else if (PLAYER == 1) {
-				DrawingOvals.controlComponents(true);
-				DrawingOvals.serverPlayer.setText(serverName);
-				DrawingOvals.clientPlayer.setText(clientName);
-			}
+			Drawing.controlComponents(true);
+			Drawing.serverPlayer.setText(serverName);
+			Drawing.clientPlayer.setText(clientName);
 			sendSpace.requestFocus();
 		}
 	}
