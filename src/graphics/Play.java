@@ -50,7 +50,7 @@ public class Play extends JFrame {
 						// When clicking the "Create Server" button, it'll
 						// redirect you to the "DrawingOvalsServer.java" class
 						setVisible(false);
-						new DrawingOvalsServer();
+						new Server();
 					}
 					if (y >= 235 && y <= 285) {
 						// When clicking the "Start" button, it'll redirect you
