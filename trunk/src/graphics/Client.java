@@ -75,13 +75,14 @@ public class Client extends Drawing {
 		
 		nameFieldButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (clientName.length() == 0) {
-					clientName = nameField.getText();
+				clientName = nameField.getText();
+				if (clientName.length() != 0) {
 					clientPlayer.setText(clientName);
 					nameField.setVisible(false);
 					nameFieldButton.setVisible(false);
 					Chat.clientName = clientName;
 					Chat.writeName(clientName);
+					waitingLabel.setText("Waiting for the server");
 				}
 			}
 		});

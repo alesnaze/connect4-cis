@@ -170,7 +170,7 @@ public class Drawing extends JFrame implements Runnable {
 		waitingImageLabel.setMaximumSize(new java.awt.Dimension(600, 250));
 		waitingImageLabel.setMinimumSize(new java.awt.Dimension(600, 250));
 
-		waitingLabel = new JLabel("Waiting for a client to connect..");
+		waitingLabel = new JLabel("Please enter your name");
 		waitingLabel.setForeground(new java.awt.Color(254, 254, 254));
 		waitingLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 25));
 

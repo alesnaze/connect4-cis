@@ -81,13 +81,14 @@ public class Server extends Drawing {
 
 		nameFieldButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (serverName.length() == 0) {
-					serverName = nameField.getText();
+				serverName = nameField.getText();
+				if (serverName.length() != 0) {
 					serverPlayer.setText(serverName);
 					nameField.setVisible(false);
 					nameFieldButton.setVisible(false);
 					Chat.serverName = serverName;
 					nameFieldStatus = true;
+					waitingLabel.setText("Waiting for the client");
 				}
 				if (socketAccepted == true) {
 					Chat.writeName(serverName);
