@@ -59,14 +59,6 @@ public class Server extends Drawing {
 			serverSocket = new ServerSocket(8451);
 			scanSocket = new ServerSocket(8453);
 
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					try {
-						scanSocket.accept();
-					} catch (IOException e) {
-					}
-				}
-			});
 			Thread tP = new Thread(this);
 			tP.start();
 		} catch (IOException ioe) {
