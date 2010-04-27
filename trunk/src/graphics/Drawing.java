@@ -424,7 +424,8 @@ public class Drawing extends JFrame implements Runnable {
 		cleanUp();
 		return 3;
 	}
-	
+	int ovalX;
+	int ovalY;
 	/**
 	 * Drawing the circles in the grid, filling them with the right color if
 	 * they're clicked, then check if anyone won the game
@@ -435,94 +436,97 @@ public class Drawing extends JFrame implements Runnable {
 		// Drawing the Circles
 		for (int i = 1; i <= 7; i++) {
 			for (int j = 1; j <= 6; j++) {
-				int ovalX = 130 + (i * 60);
-				int ovalY = (j * 60);
+				ovalX = 130 + (i * 60);
+				ovalY = (j * 60);
 				if (x >= ovalX && x <= 50 + ovalX) {
 					if (y >= ovalY && y <= 50 + ovalY) {
-						// getting the X and Y indexes
-						int xIndex = (ovalX - 130) / 60;
-						int yIndex = ovalY / 60;
-						boolean isFull = ICheck.checkFull(full);
-						try {
-							if (isFull == true) {
-								// try the following if the board is full
-								File filename = new File("src/sounds/alert.mp3");
-                                MP3 mp3 = new MP3(filename);
-                                mp3.play();
-								String[] options = { "Replay", "Exit" };
-								int option = JOptionPane.showOptionDialog(null,
-										"The board is full.", "Replay?",
-										JOptionPane.YES_NO_OPTION,
-										JOptionPane.INFORMATION_MESSAGE, null,
-										options, options[0]);
-								if (option == 0) {
-									replayGame();
-								} else {
-									cleanUp();
-									System.exit(0);
-								}
-							} else {
-								int row = ICheck.checkColumn(xIndex, img, jlbl);
-								if (row == -1)
-									JOptionPane.showMessageDialog(null,
-											"not available here");
-								else {
-									full++;
-									yIndex = row + 1;
-									jlbl[yIndex - 1][xIndex - 1].setIcon(secondColor);
-									String win = ICheck.checkwin(jlbl, red,
-											green);
-									if (win == "none") {
-										if (PLAYERNumber == 1) {
-											out.writeUTF(yIndex + "x" + xIndex
-													+ "x" + 2);
-										}
-										else if (PLAYERNumber == 2) {
-											out.writeUTF(yIndex + "x" + xIndex
-													+ "x" + 1);
-										}
-										File filename = new File("src/sounds/sound6.mp3");// playing mp3 file
-                                        MP3 mp3 = new MP3(filename);
-                                        mp3.play();
-									}
-									else {
-										out.writeUTF(yIndex + "x" + xIndex
-												+ "x" + 0);
-										if (PLAYERNumber == 1) {
-											clientWin += 1;
-											clientScore.setText("Score:  " + clientWin);
-										}
-										else if (PLAYERNumber == 2) {
-											serverWin += 1;
-											serverScore.setText("Score:  " + serverWin);
-										}
-										
-										File filename = new File("src/sounds/app-15.mp3");// playing mp3 file 
-                                        MP3 mp3 = new MP3(filename);
-                                        mp3.play();
-										JOptionPane.showMessageDialog(null,
-												"you win");
-									}
-									if (PLAYERNumber == 1) {
-										PLAYER = 2;	
-									}
-									else if (PLAYERNumber == 2) {
-										PLAYER = 1;
-									}
-									out.flush();
-								}
-							}
-
-						} catch (IOException ie) {
-							File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
-                            MP3 mp3 = new MP3(filename);
-                            mp3.play();
-							cleanUp();
-							System.exit(1);
-						}
+						paintCircles();
 					}
 				}
 			}
+		}
+	}
+	private void paintCircles() {
+		// getting the X and Y indexes
+		int xIndex = (ovalX - 130) / 60;
+		int yIndex = ovalY / 60;
+		boolean isFull = ICheck.checkFull(full);
+		try {
+			if (isFull == true) {
+				// try the following if the board is full
+				File filename = new File("src/sounds/alert.mp3");
+                MP3 mp3 = new MP3(filename);
+                mp3.play();
+				String[] options = { "Replay", "Exit" };
+				int option = JOptionPane.showOptionDialog(null,
+						"The board is full.", "Replay?",
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE, null,
+						options, options[0]);
+				if (option == 0) {
+					replayGame();
+				} else {
+					cleanUp();
+					System.exit(0);
+				}
+			} else {
+				int row = ICheck.checkColumn(xIndex, img, jlbl);
+				if (row == -1)
+					JOptionPane.showMessageDialog(null,
+							"not available here");
+				else {
+					full++;
+					yIndex = row + 1;
+					jlbl[yIndex - 1][xIndex - 1].setIcon(secondColor);
+					String win = ICheck.checkwin(jlbl, red,
+							green);
+					if (win == "none") {
+						if (PLAYERNumber == 1) {
+							out.writeUTF(yIndex + "x" + xIndex
+									+ "x" + 2);
+						}
+						else if (PLAYERNumber == 2) {
+							out.writeUTF(yIndex + "x" + xIndex
+									+ "x" + 1);
+						}
+						File filename = new File("src/sounds/sound6.mp3");// playing mp3 file
+                        MP3 mp3 = new MP3(filename);
+                        mp3.play();
+					}
+					else {
+						out.writeUTF(yIndex + "x" + xIndex
+								+ "x" + 0);
+						if (PLAYERNumber == 1) {
+							clientWin += 1;
+							clientScore.setText("Score:  " + clientWin);
+						}
+						else if (PLAYERNumber == 2) {
+							serverWin += 1;
+							serverScore.setText("Score:  " + serverWin);
+						}
+						
+						File filename = new File("src/sounds/app-15.mp3");// playing mp3 file 
+                        MP3 mp3 = new MP3(filename);
+                        mp3.play();
+						JOptionPane.showMessageDialog(null,
+								"you win");
+					}
+					if (PLAYERNumber == 1) {
+						PLAYER = 2;	
+					}
+					else if (PLAYERNumber == 2) {
+						PLAYER = 1;
+					}
+					out.flush();
+				}
+			}
+
+		} catch (IOException ie) {
+			File filename = new File("src/sounds/alert.mp3");// playing mp3 file 
+            MP3 mp3 = new MP3(filename);
+            mp3.play();
+			cleanUp();
+			System.exit(1);
 		}
 	}
 }
