@@ -1,10 +1,6 @@
 
 package chat;
 
-import graphics.Client;
-import graphics.Drawing;
-import graphics.Play;
-import graphics.Server;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -23,6 +19,10 @@ import java.net.Socket;
 
 import javax.swing.*;
 
+import logic.Client;
+import logic.Drawing;
+import logic.Server;
+import main.Main;
 import mp3.MP3;
 
 @SuppressWarnings( { "unused", "serial" })

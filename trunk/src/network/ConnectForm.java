@@ -1,6 +1,5 @@
 package network;
 
-import graphics.Client;
 
 import java.awt.Image;
 import java.net.InetAddress;
@@ -9,6 +8,8 @@ import java.net.UnknownHostException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+
+import logic.Client;
 
 
 @SuppressWarnings({"unused", "serial"})
