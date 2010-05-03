@@ -14,8 +14,6 @@ one of team members
   * irc: connect4
 === Basma ===
   * A very talented Flash designer who designed the project's flash page.
-=== Dina Ramadan ===
-  * Java programmer
 === Hend Gabr===
   * Java SE , jav EE programmer
   * C# programmer 
