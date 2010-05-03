@@ -1,9 +1,5 @@
 package chat;
 
-import graphics.Client;
-import graphics.Drawing;
-import graphics.ICheck;
-import graphics.Server;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -32,6 +28,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import logic.Client;
+import logic.Drawing;
+import logic.ICheck;
+import logic.Server;
 import mp3.MP3;
 
 @SuppressWarnings({ "unused", "serial" })

@@ -1,8 +1,6 @@
 
 package chat;
 
-import graphics.Client;
-import graphics.Drawing;
 
 import java.awt.Color;
 import java.io.BufferedReader;
@@ -14,6 +12,8 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import logic.Client;
+import logic.Drawing;
 import mp3.MP3;
 import network.ConnectForm;
 
